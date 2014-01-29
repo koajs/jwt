@@ -72,7 +72,7 @@ app.use(jwt({ secret: 'shared-secret', passthrough: true }));
 This lets downstream middleware make decisions based on whether `ctx.user` is set.
 
 
-You can specify audience and/or issuer as well
+You can specify audience and/or issuer as well:
 ```js
 app.use(jwt({ secret:   'shared-secret',
               audience: 'http://myapi/protected',
@@ -81,7 +81,7 @@ app.use(jwt({ secret:   'shared-secret',
 If the JWT has an expiration (`exp`), it will be checked.
 
 This module also support tokens signed with public/private key pairs. Instead 
-of a secret, you can specify a Buffer with the public key
+of a secret, you can specify a Buffer with the public key:
 ```js
 var publicKey = fs.readFileSync('/path/to/public.pub');
 app.use(jwt({ secret: publicKey }));
