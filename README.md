@@ -56,8 +56,9 @@ app.use(jwt({ secret: 'shared-secret' }));
 
 // Protected middleware
 app.use(function *(){
-  if (this.url.match(/^\/api/))
-  this.body = 'protected\n';
+  if (this.url.match(/^\/api/)) {
+    this.body = 'protected\n';
+  }
 });
 
 app.listen(3000);

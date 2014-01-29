@@ -46,8 +46,9 @@ app.use(function *(next){
 app.use(jwt({ secret: 'secret' }));
 
 app.use(function *(){
-  if (this.url.match(/^\/api/))
-  this.body = 'protected\n';
+  if (this.url.match(/^\/api/)) {
+    this.body = 'protected\n';
+  }
 });
 
 app.listen(3000);
