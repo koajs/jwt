@@ -159,4 +159,28 @@ describe('success tests', function () {
 
   });
 
+  it('should use provided key for decoded data', function(done) {
+    var validUserResponse = function(res) {
+      if (!(res.body.foo === 'bar')) return "Key param not used properly";
+    }
+
+    var secret = 'shhhhhh';
+    var token = jwt.sign({foo: 'bar'}, secret);
+    
+    var app = koa();
+
+    app.use(koajwt({ secret: secret, key: 'jwtdata' }));
+    app.use(function* (next) {
+      this.body = this.jwtdata;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(200)
+      .expect(validUserResponse)
+      .end(done);
+
+  });
+
 });

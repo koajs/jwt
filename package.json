@@ -1,7 +1,7 @@
 {
   "name": "koa-jwt",
-  "version": "0.0.1",
-  "description": "JWT authentication middleware.",
+  "version": "0.0.2",
+  "description": "Koa JWT authentication middleware.",
   "keywords": [
     "auth",
     "authn",
@@ -10,6 +10,8 @@
     "authorization",
     "http",
     "jwt",
+    "json",
+    "middleware",
     "token",
     "oauth",
     "koa"

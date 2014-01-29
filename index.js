@@ -7,6 +7,7 @@ JWT.verify = thunkify(JWT.verify);
 
 module.exports = function(opts) {
   opts = opts || {};
+  opts.key = opts.key || 'user';
 
   assert(opts.secret, '"secret" option is required');
 
@@ -40,7 +41,7 @@ module.exports = function(opts) {
     }
 
     if (user || opts.passthrough) {
-      this.user = user;
+      this[opts.key] = user;
       yield next;
     } else {
       this.throw(401, msg);

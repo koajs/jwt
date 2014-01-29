@@ -1,7 +1,7 @@
 # koa-jwt
 
 Koa middleware that validates JSON Web Tokens and sets `ctx.user`
-if a valid token is provided.
+(by default) if a valid token is provided.
 
 This module lets you authenticate HTTP requests using JSON Web Tokens 
 in your [Koa](http://koajs.com/) (node.js) applications.
@@ -16,9 +16,9 @@ for a good introduction.
 ## Usage
 
 The JWT authentication middleware authenticates callers using a JWT
-token.  If the token is valid, `ctx.user` will be set with the JSON 
-object decoded to be used by later middleware for authorization and 
-access control. 
+token.  If the token is valid, `ctx.user` (by default) will be set 
+with the JSON object decoded to be used by later middleware for 
+authorization and access control. 
 
 ## Example
 
@@ -64,6 +64,7 @@ app.use(function *(){
 app.listen(3000);
 ```
 
+
 Alternatively, you can add the `passthrough` option to always yield next,
 even if no valid Authorization header was found: 
 ```js
@@ -72,6 +73,12 @@ app.use(jwt({ secret: 'shared-secret', passthrough: true }));
 This lets downstream middleware make decisions based on whether `ctx.user` is set.
 
 
+If you prefer to use another ctx key for the decoded data, just pass in `key`, like so:
+```js
+app.use(jwt({ secret: 'shared-secret', key: 'jwtdata' }));
+```
+This makes the decoded data available as `ctx.jwtdata`.
+
 You can specify audience and/or issuer as well:
 ```js
 app.use(jwt({ secret:   'shared-secret',
@@ -79,6 +86,7 @@ app.use(jwt({ secret:   'shared-secret',
               issuer:   'http://issuer' }));
 ```
 If the JWT has an expiration (`exp`), it will be checked.
+
 
 This module also support tokens signed with public/private key pairs. Instead 
 of a secret, you can specify a Buffer with the public key:
