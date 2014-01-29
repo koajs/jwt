@@ -1,0 +1,51 @@
+{
+  "name": "koa-jwt",
+  "version": "0.0.1",
+  "description": "JWT authentication middleware.",
+  "keywords": [
+    "auth",
+    "authn",
+    "authentication",
+    "authz",
+    "authorization",
+    "http",
+    "jwt",
+    "token",
+    "oauth",
+    "koa"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/stiang/koa-jwt.git"
+  },
+  "bugs": {
+    "url": "http://github.com/stiang/koa-jwt/issues"
+  },
+  "author": {
+    "name": "Stian Grytøyr",
+    "email": "stian@grytoyr.net",
+    "url": "http://stian.grytoyr.net/"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    }
+  ],
+  "main": "./lib",
+  "dependencies": {
+    "jsonwebtoken": "~0.1.0",
+    "thunkify": "0.0.x"
+  },
+  "devDependencies": {
+    "koa": "koajs/koa",
+    "mocha": "~1.12.0",
+    "supertest": "0.9.x"
+  },
+  "engines": {
+    "node": ">= 0.11.9"
+  },
+  "scripts": {
+    "test": "make test"
+  }
+}
