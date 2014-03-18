@@ -48,3 +48,7 @@ module.exports = function(opts) {
     }
   };
 };
+
+module.exports.sign = JWT.sign;
+
+module.exports.verify = JWT.verify;
