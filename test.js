@@ -1,9 +1,7 @@
 var koa     = require('koa');
 var request = require('supertest');
-var jwt     = require('jsonwebtoken');
 var assert  = require('assert');
-
-var koajwt  = require('.');
+var koajwt  = require('./index');
 
 describe('failure tests', function () {
 
@@ -53,7 +51,7 @@ describe('failure tests', function () {
 
   it('should throw if authorization header is not valid jwt', function(done) {
     var secret = 'shhhhhh';
-    var token = jwt.sign({foo: 'bar'}, secret);
+    var token = koajwt.sign({foo: 'bar'}, secret);
     
     var app = koa();
 
@@ -69,7 +67,7 @@ describe('failure tests', function () {
 
   it('should throw if audience is not expected', function(done) {
     var secret = 'shhhhhh';
-    var token = jwt.sign({foo: 'bar', aud: 'expected-audience'}, secret);
+    var token = koajwt.sign({foo: 'bar', aud: 'expected-audience'}, secret);
     
     var app = koa();
 
@@ -84,7 +82,7 @@ describe('failure tests', function () {
 
   it('should throw if token is expired', function(done) {
     var secret = 'shhhhhh';
-    var token = jwt.sign({foo: 'bar', exp: 1382412921 }, secret);
+    var token = koajwt.sign({foo: 'bar', exp: 1382412921 }, secret);
     
     var app = koa();
 
@@ -99,7 +97,7 @@ describe('failure tests', function () {
 
   it('should throw if token issuer is wrong', function(done) {
     var secret = 'shhhhhh';
-    var token = jwt.sign({foo: 'bar', iss: 'http://foo' }, secret);
+    var token = koajwt.sign({foo: 'bar', iss: 'http://foo' }, secret);
     
     var app = koa();
 
@@ -141,7 +139,7 @@ describe('success tests', function () {
     }
 
     var secret = 'shhhhhh';
-    var token = jwt.sign({foo: 'bar'}, secret);
+    var token = koajwt.sign({foo: 'bar'}, secret);
     
     var app = koa();
 
@@ -165,7 +163,7 @@ describe('success tests', function () {
     }
 
     var secret = 'shhhhhh';
-    var token = jwt.sign({foo: 'bar'}, secret);
+    var token = koajwt.sign({foo: 'bar'}, secret);
     
     var app = koa();
 
