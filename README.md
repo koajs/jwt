@@ -100,7 +100,7 @@ app.use(jwt({ secret: publicKey }));
 - [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) — JSON Web Token signing 
 and verification
 
-Note that koa-jwt exports the `sign` and `verify` functions from the above module as a convenience.
+Note that koa-jwt exports the `sign`, `verify` and `decode` functions from the above module as a convenience.
 
 ## Tests
 
@@ -117,6 +117,11 @@ This code is largely based on [express-jwt](https://github.com/auth0/express-jwt
 
   - [Auth0](http://auth0.com/)
   - [Matias Woloski](http://github.com/woloski)
+
+## Contributors
+- [soygul] (https://github.com/soygul)
+- [tunnckoCore] (https://github.com/tunnckoCore)
+- [getuliojr] (https://github.com/getuliojr)
 
 ## License
 

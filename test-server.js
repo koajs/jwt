@@ -1,12 +1,11 @@
-var JWT = require('jsonwebtoken');
 var koa = require('koa');
-var jwt = require('.');
+var koajwt = require('./index');
 
 var profile = {
   id: 123
 };
 
-var token = JWT.sign(profile, 'secret', { expiresInMinutes: 60*5 });
+var token = koajwt.sign(profile, 'secret', { expiresInMinutes: 60*5 });
 
 console.log('Starting koa-jwt test server on http://localhost:3000/');
 console.log('');
@@ -43,7 +42,7 @@ app.use(function *(next){
 });
 
 // Middleware below this line is only reached if JWT token is valid
-app.use(jwt({ secret: 'secret' }));
+app.use(koajwt({ secret: 'secret' }));
 
 app.use(function *(){
   if (this.url.match(/^\/api/)) {
