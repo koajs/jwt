@@ -118,6 +118,11 @@ This code is largely based on [express-jwt](https://github.com/auth0/express-jwt
   - [Auth0](http://auth0.com/)
   - [Matias Woloski](http://github.com/woloski)
 
+## Contributors
+- [soygul] (https://github.com/soygul)
+- [tunnckoCore] (https://github.com/tunnckoCore)
+- [getuliojr] (https://github.com/getuliojr)
+
 ## License
 
 [The MIT License](http://opensource.org/licenses/MIT)
