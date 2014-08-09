@@ -3,7 +3,7 @@ var thunkify = require('thunkify');
 var JWT      = require('jsonwebtoken');
 
 // Make verify function play nice with co/koa
-JWT.verify = thunkify(JWT.verify);
+verify = thunkify(JWT.verify);
 
 module.exports = function(opts) {
   opts = opts || {};
@@ -35,7 +35,7 @@ module.exports = function(opts) {
     }
 
     try {
-      user = yield JWT.verify(token, opts.secret, opts);
+      user = yield verify(token, opts.secret, opts);
     } catch(e) {
       msg = 'Invalid token' + (opts.debug ? ' - ' + e.message + '\n' : '\n');
     }
@@ -49,6 +49,7 @@ module.exports = function(opts) {
   };
 };
 
-module.exports.sign = JWT.sign;
-module.exports.verify = JWT.verify;
+// Export JWT methods as a convenience
+module.exports.sign   = JWT.sign;
+module.exports.verify = verify;
 module.exports.decode = JWT.decode;
