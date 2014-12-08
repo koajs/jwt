@@ -120,7 +120,7 @@ describe('passthrough tests', function () {
 
     app.use(koajwt({ secret: 'shhhhhh', passthrough: true, debug: true }));
     app.use(function* (next) {
-      this.body = this.state.user;
+      this.body = this.user;
     });
 
     request(app.listen())
@@ -146,7 +146,7 @@ describe('success tests', function () {
 
     app.use(koajwt({ secret: secret }));
     app.use(function* (next) {
-      this.body = this.state.user;
+      this.body = this.user;
     });
 
     request(app.listen())
@@ -170,7 +170,7 @@ describe('success tests', function () {
 
     app.use(koajwt({ secret: secret, key: 'jwtdata' }));
     app.use(function* (next) {
-      this.body = this.state.jwtdata;
+      this.body = this.jwtdata;
     });
 
     request(app.listen())
