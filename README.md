@@ -1,6 +1,6 @@
 # koa-jwt
 
-Koa middleware that validates JSON Web Tokens and sets `ctx.user`
+Koa middleware that validates JSON Web Tokens and sets `ctx.state.user`
 (by default) if a valid token is provided.
 
 This module lets you authenticate HTTP requests using JSON Web Tokens 
@@ -16,7 +16,7 @@ for a good introduction.
 ## Usage
 
 The JWT authentication middleware authenticates callers using a JWT
-token.  If the token is valid, `ctx.user` (by default) will be set 
+token.  If the token is valid, `ctx.state.user` (by default) will be set 
 with the JSON object decoded to be used by later middleware for 
 authorization and access control. 
 
@@ -70,14 +70,14 @@ even if no valid Authorization header was found:
 ```js
 app.use(jwt({ secret: 'shared-secret', passthrough: true }));
 ```
-This lets downstream middleware make decisions based on whether `ctx.user` is set.
+This lets downstream middleware make decisions based on whether `ctx.state.user` is set.
 
 
 If you prefer to use another ctx key for the decoded data, just pass in `key`, like so:
 ```js
 app.use(jwt({ secret: 'shared-secret', key: 'jwtdata' }));
 ```
-This makes the decoded data available as `ctx.jwtdata`.
+This makes the decoded data available as `ctx.state.jwtdata`.
 
 You can specify audience and/or issuer as well:
 ```js
@@ -101,6 +101,8 @@ app.use(jwt({ secret: publicKey }));
 and verification
 
 Note that koa-jwt exports the `sign`, `verify` and `decode` functions from the above module as a convenience.
+
+`verify` is thunkified to play nice with co/koa
 
 ## Tests
 
