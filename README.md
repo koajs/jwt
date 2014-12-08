@@ -102,6 +102,8 @@ and verification
 
 Note that koa-jwt exports the `sign`, `verify` and `decode` functions from the above module as a convenience.
 
+`verify` is thunkified to play nice with co/koa
+
 ## Tests
 
     $ npm install
