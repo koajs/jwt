@@ -53,7 +53,7 @@ describe('failure tests', function () {
   it('should throw if authorization header is not valid jwt', function(done) {
     var secret = 'shhhhhh';
     var token = koajwt.sign({foo: 'bar'}, secret);
-    
+
     var app = koa();
 
     app.use(koajwt({ secret: 'different-shhhh', debug: true }));
@@ -69,7 +69,7 @@ describe('failure tests', function () {
   it('should throw if audience is not expected', function(done) {
     var secret = 'shhhhhh';
     var token = koajwt.sign({foo: 'bar', aud: 'expected-audience'}, secret);
-    
+
     var app = koa();
 
     app.use(koajwt({ secret: 'shhhhhh', audience: 'not-expected-audience', debug: true }));
@@ -84,7 +84,7 @@ describe('failure tests', function () {
   it('should throw if token is expired', function(done) {
     var secret = 'shhhhhh';
     var token = koajwt.sign({foo: 'bar', exp: 1382412921 }, secret);
-    
+
     var app = koa();
 
     app.use(koajwt({ secret: 'shhhhhh', debug: true }));
@@ -99,7 +99,7 @@ describe('failure tests', function () {
   it('should throw if token issuer is wrong', function(done) {
     var secret = 'shhhhhh';
     var token = koajwt.sign({foo: 'bar', iss: 'http://foo' }, secret);
-    
+
     var app = koa();
 
     app.use(koajwt({ secret: 'shhhhhh', issuer: 'http://wrong', debug: true }));
@@ -141,7 +141,7 @@ describe('success tests', function () {
 
     var secret = 'shhhhhh';
     var token = koajwt.sign({foo: 'bar'}, secret);
-    
+
     var app = koa();
 
     app.use(koajwt({ secret: secret }));
@@ -165,7 +165,7 @@ describe('success tests', function () {
 
     var secret = 'shhhhhh';
     var token = koajwt.sign({foo: 'bar'}, secret);
-    
+
     var app = koa();
 
     app.use(koajwt({ secret: secret, key: 'jwtdata' }));

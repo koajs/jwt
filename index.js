@@ -19,7 +19,7 @@ module.exports = function(opts) {
       if (parts.length == 2) {
         scheme = parts[0];
         credentials = parts[1];
-          
+
         if (/^Bearer$/i.test(scheme)) {
           token = credentials;
         }

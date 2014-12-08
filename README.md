@@ -3,10 +3,10 @@
 Koa middleware that validates JSON Web Tokens and sets `ctx.user`
 (by default) if a valid token is provided.
 
-This module lets you authenticate HTTP requests using JSON Web Tokens 
+This module lets you authenticate HTTP requests using JSON Web Tokens
 in your [Koa](http://koajs.com/) (node.js) applications.
 
-See [this article](http://blog.auth0.com/2014/01/07/angularjs-authentication-with-cookies-vs-token/) 
+See [this article](http://blog.auth0.com/2014/01/07/angularjs-authentication-with-cookies-vs-token/)
 for a good introduction.
 
 ## Install
@@ -16,9 +16,9 @@ for a good introduction.
 ## Usage
 
 The JWT authentication middleware authenticates callers using a JWT
-token.  If the token is valid, `ctx.user` (by default) will be set 
-with the JSON object decoded to be used by later middleware for 
-authorization and access control. 
+token.  If the token is valid, `ctx.user` (by default) will be set
+with the JSON object decoded to be used by later middleware for
+authorization and access control.
 
 ## Example
 
@@ -66,7 +66,7 @@ app.listen(3000);
 
 
 Alternatively, you can add the `passthrough` option to always yield next,
-even if no valid Authorization header was found: 
+even if no valid Authorization header was found:
 ```js
 app.use(jwt({ secret: 'shared-secret', passthrough: true }));
 ```
@@ -88,7 +88,7 @@ app.use(jwt({ secret:   'shared-secret',
 If the JWT has an expiration (`exp`), it will be checked.
 
 
-This module also support tokens signed with public/private key pairs. Instead 
+This module also support tokens signed with public/private key pairs. Instead
 of a secret, you can specify a Buffer with the public key:
 ```js
 var publicKey = fs.readFileSync('/path/to/public.pub');
@@ -97,7 +97,7 @@ app.use(jwt({ secret: publicKey }));
 
 ## Related Modules
 
-- [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) — JSON Web Token signing 
+- [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) — JSON Web Token signing
 and verification
 
 Note that koa-jwt exports the `sign`, `verify` and `decode` functions from the above module as a convenience.
