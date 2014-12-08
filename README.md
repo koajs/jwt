@@ -26,7 +26,7 @@ authorization and access control.
 be the default user data store in an upcoming Koa release (see https://github.com/koajs/koa/pull/366). 
 For now, you may need to initialize this object yourself, like so:**
 
-```
+```js
 app.use(function *(next) {
   this.state = this.state || {};
   yield next;
@@ -44,6 +44,7 @@ var app = koa();
 
 // Custom 401 handling if you don't want to expose koa-jwt errors to users
 app.use(function *(next){
+  this.state = this.state || {};
   try {
     yield next;
   } catch (err) {
