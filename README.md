@@ -11,14 +11,28 @@ for a good introduction.
 
 ## Install
 
-    $ npm install koa-jwt
+```
+$ npm install koa-jwt
+```
 
 ## Usage
 
 The JWT authentication middleware authenticates callers using a JWT
-token.  If the token is valid, `ctx.user` (by default) will be set
+token.  If the token is valid, `ctx.state.user` (by default) will be set
 with the JSON object decoded to be used by later middleware for
 authorization and access control.
+
+**Please note that koa-jwt already uses the `ctx.state` object, which will 
+be the default user data store in an upcoming Koa release (see https://github.com/koajs/koa/pull/366). 
+For now, you may need to initialize this object yourself, like so:**
+
+```
+app.use(function *(next) {
+  this.state = this.state || {};
+  yield next;
+});
+```
+
 
 ## Example
 
@@ -73,7 +87,7 @@ app.use(jwt({ secret: 'shared-secret', passthrough: true }));
 This lets downstream middleware make decisions based on whether `ctx.state.user` is set.
 
 
-If you prefer to use another ctx key for the decoded data, just pass in `key`, like so:
+If you prefer to use another ctx.state key for the decoded data, just pass in `key`, like so:
 ```js
 app.use(jwt({ secret: 'shared-secret', key: 'jwtdata' }));
 ```
