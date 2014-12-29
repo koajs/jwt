@@ -12,11 +12,11 @@ module.exports = function(opts) {
   assert(opts.secret, '"secret" option is required');
 
   return function *jwt(next) {
-    var token, msg, user, parts
+    var token, msg, user, parts;
 
     if (this.header.authorization) {
       parts = this.header.authorization.split(' ');
-      if (parts.length == 2 && /^ApplePass$/i.test(parts[0])) {
+      if (parts.length === 2 && /^ApplePass$/i.test(parts[0])) {
         token = parts[1];
       } else {
         if (!opts.passthrough) {
