@@ -66,6 +66,21 @@ describe('failure tests', function () {
       //   assert.equal(err.message, 'invalid signature');
   });
 
+  it('should return 401 if authorization header is token scheme is incorrect', function(done) {
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, secret);
+
+    var app = koa();
+
+    app.use(koajwt({ secret: 'shhhh' }));
+    request(app.listen())
+        .get('/')
+        .set('Authorization', 'Bearer ' + token)
+        .expect(401)
+        .expect('Bad Authorization header format. Format is "Authorization: ApplePass <token>"\n')
+        .end(done);
+  });
+
   it('should throw if audience is not expected', function(done) {
     var secret = 'shhhhhh';
     var token = koajwt.sign({foo: 'bar', aud: 'expected-audience'}, secret);

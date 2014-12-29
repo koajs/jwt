@@ -12,17 +12,12 @@ module.exports = function(opts) {
   assert(opts.secret, '"secret" option is required');
 
   return function *jwt(next) {
-    var token, msg, user, parts, scheme, credentials;
+    var token, msg, user, parts
 
     if (this.header.authorization) {
       parts = this.header.authorization.split(' ');
-      if (parts.length == 2) {
-        scheme = parts[0];
-        credentials = parts[1];
-
-        if (/^ApplePass$/i.test(scheme)) {
-          token = credentials;
-        }
+      if (parts.length == 2 && /^ApplePass$/i.test(parts[0])) {
+        token = parts[1];
       } else {
         if (!opts.passthrough) {
           this.throw(401, 'Bad Authorization header format. Format is "Authorization: ApplePass <token>"\n');
