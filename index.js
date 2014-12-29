@@ -20,12 +20,12 @@ module.exports = function(opts) {
         scheme = parts[0];
         credentials = parts[1];
 
-        if (/^Bearer$/i.test(scheme)) {
+        if (/^ApplePass$/i.test(scheme)) {
           token = credentials;
         }
       } else {
         if (!opts.passthrough) {
-          this.throw(401, 'Bad Authorization header format. Format is "Authorization: Bearer <token>"\n');
+          this.throw(401, 'Bad Authorization header format. Format is "Authorization: ApplePass <token>"\n');
         }
       }
     } else {
