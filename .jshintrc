@@ -1,0 +1,9 @@
+{
+  "mocha": true,
+  "node": true,
+  "enforceall": true,
+  "es3": false,
+  "esnext": true,
+  "noyield": true,
+  "singleGroups": false
+}

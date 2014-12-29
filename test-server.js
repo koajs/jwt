@@ -10,11 +10,11 @@ var token = koajwt.sign(profile, 'secret', { expiresInMinutes: 60*5 });
 console.log('Starting koa-jwt test server on http://localhost:3000/');
 console.log('');
 console.log('You can test the server by issuing curl commands like the following:');
-console.log('')
+console.log('');
 console.log('  curl http://localhost:3000/public/foo            # should succeed');
 console.log('  curl http://localhost:3000/api/foo               # should fail');
-console.log('  curl -H "Authorization: Bearer ' + token + '" http://localhost:3000/api/foo   # should succeed');
-console.log('')
+console.log('  curl -H "Authorization: ApplePass ' + token + '" http://localhost:3000/api/foo   # should succeed');
+console.log('');
 
 var app = koa();
 
@@ -23,7 +23,7 @@ app.use(function *(next){
   try {
     yield next;
   } catch (err) {
-    if (401 == err.status) {
+    if (401 === err.status) {
       this.status = 401;
       this.body = '401 Unauthorized - Protected resource, use Authorization header to get access\n';
     } else {
