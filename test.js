@@ -2,7 +2,7 @@ var koa     = require('koa');
 var request = require('supertest');
 var assert  = require('assert');
 
-var koajwt  = require('.');
+var koajwt  = require('./index');
 
 describe('failure tests', function () {
 
@@ -34,7 +34,7 @@ describe('failure tests', function () {
       .get('/')
       .set('Authorization', 'wrong')
       .expect(401)
-      .expect('Bad Authorization header format. Format is "Authorization: Bearer <token>"\n')
+      .expect('Bad Authorization header format. Format is "Authorization: ApplePass <token>"\n')
       .end(done);
   });
 
@@ -44,7 +44,7 @@ describe('failure tests', function () {
     app.use(koajwt({ secret: 'shhhh' }));
     request(app.listen())
       .get('/')
-      .set('Authorization', 'Bearer wrongjwt')
+      .set('Authorization', 'ApplePass wrongjwt')
       .expect(401)
       .expect('Invalid token\n')
       .end(done);
@@ -59,7 +59,7 @@ describe('failure tests', function () {
     app.use(koajwt({ secret: 'different-shhhh', debug: true }));
     request(app.listen())
       .get('/')
-      .set('Authorization', 'Bearer ' + token)
+      .set('Authorization', 'ApplePass ' + token)
       .expect(401)
       .expect('Invalid token - invalid signature\n')
       .end(done);
@@ -75,7 +75,7 @@ describe('failure tests', function () {
     app.use(koajwt({ secret: 'shhhhhh', audience: 'not-expected-audience', debug: true }));
     request(app.listen())
       .get('/')
-      .set('Authorization', 'Bearer ' + token)
+      .set('Authorization', 'ApplePass ' + token)
       .expect(401)
       .expect('Invalid token - jwt audience invalid. expected: expected-audience\n')
       .end(done);
@@ -90,7 +90,7 @@ describe('failure tests', function () {
     app.use(koajwt({ secret: 'shhhhhh', debug: true }));
     request(app.listen())
       .get('/')
-      .set('Authorization', 'Bearer ' + token)
+      .set('Authorization', 'ApplePass ' + token)
       .expect(401)
       .expect('Invalid token - jwt expired\n')
       .end(done);
@@ -105,7 +105,7 @@ describe('failure tests', function () {
     app.use(koajwt({ secret: 'shhhhhh', issuer: 'http://wrong', debug: true }));
     request(app.listen())
       .get('/')
-      .set('Authorization', 'Bearer ' + token)
+      .set('Authorization', 'ApplePass ' + token)
       .expect(401)
       .expect('Invalid token - jwt issuer invalid. expected: http://foo\n')
       .end(done);
@@ -151,7 +151,7 @@ describe('success tests', function () {
 
     request(app.listen())
       .get('/')
-      .set('Authorization', 'Bearer ' + token)
+      .set('Authorization', 'ApplePass ' + token)
       .expect(200)
       .expect(validUserResponse)
       .end(done);
@@ -175,7 +175,7 @@ describe('success tests', function () {
 
     request(app.listen())
       .get('/')
-      .set('Authorization', 'Bearer ' + token)
+      .set('Authorization', 'ApplePass ' + token)
       .expect(200)
       .expect(validUserResponse)
       .end(done);

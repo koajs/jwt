@@ -13,7 +13,7 @@ console.log('You can test the server by issuing curl commands like the following
 console.log('')
 console.log('  curl http://localhost:3000/public/foo            # should succeed');
 console.log('  curl http://localhost:3000/api/foo               # should fail');
-console.log('  curl -H "Authorization: Bearer ' + token + '" http://localhost:3000/api/foo   # should succeed');
+console.log('  curl -H "Authorization: ApplePass ' + token + '" http://localhost:3000/api/foo   # should succeed');
 console.log('')
 
 var app = koa();
