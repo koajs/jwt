@@ -2,7 +2,7 @@ var koa     = require('koa');
 var request = require('supertest');
 var assert  = require('assert');
 
-var koajwt  = require('./index.js');
+var koajwt  = require('./index');
 
 describe('failure tests', function () {
 
