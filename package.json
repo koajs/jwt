@@ -40,7 +40,7 @@
     "thunkify": "~2.1.x"
   },
   "devDependencies": {
-    "koa": "~0.18.1",
+    "koa": "koajs/koa",
     "mocha": "~2.2.1",
     "supertest": "~0.15.0"
   },
