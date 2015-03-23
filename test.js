@@ -2,7 +2,7 @@ var koa     = require('koa');
 var request = require('supertest');
 var assert  = require('assert');
 
-var koajwt  = require('.');
+var koajwt  = require('./index');
 
 describe('failure tests', function () {
 
@@ -77,7 +77,7 @@ describe('failure tests', function () {
       .get('/')
       .set('Authorization', 'Bearer ' + token)
       .expect(401)
-      .expect('Invalid token - jwt audience invalid. expected: expected-audience\n')
+      .expect('Invalid token - jwt audience invalid. expected: not-expected-audience\n')
       .end(done);
   });
 
@@ -107,7 +107,7 @@ describe('failure tests', function () {
       .get('/')
       .set('Authorization', 'Bearer ' + token)
       .expect(401)
-      .expect('Invalid token - jwt issuer invalid. expected: http://foo\n')
+      .expect('Invalid token - jwt issuer invalid. expected: http://wrong\n')
       .end(done);
   });
 
