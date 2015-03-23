@@ -128,6 +128,7 @@ This code is largely based on [express-jwt](https://github.com/auth0/express-jwt
 - [tunnckoCore] (https://github.com/tunnckoCore)
 - [getuliojr] (https://github.com/getuliojr)
 - [cesarandreu] (https://github.com/cesarandreu)
+- [michaelwestphal] (https://github.com/michaelwestphal)
 
 ## License
 

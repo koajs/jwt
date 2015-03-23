@@ -1,6 +1,6 @@
 {
   "name": "koa-jwt",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Koa JWT authentication middleware.",
   "keywords": [
     "auth",
