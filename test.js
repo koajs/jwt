@@ -1,3 +1,5 @@
+var TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIiLCJpYXQiOjE0MjY1NDY5MTl9.ETgkTn8BaxIX4YqvUWVFPmum3moNZ7oARZtSBXb_vP4';
+
 var koa     = require('koa');
 var request = require('supertest');
 var assert  = require('assert');
