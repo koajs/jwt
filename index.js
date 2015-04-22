@@ -41,7 +41,8 @@ module.exports = function(opts) {
     }
 
     if (user || opts.passthrough) {
-      this[opts.key] = user;
+      this.state = this.state || {};
+      this.state[opts.key] = user;
       yield next;
     } else {
       this.throw(401, msg);
