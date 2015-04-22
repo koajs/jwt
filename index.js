@@ -50,6 +50,6 @@ module.exports = function(opts) {
 };
 
 // Export JWT methods as a convenience
-module.exports.sign   = JWT.sign;
-module.exports.verify = JWT.verify;
-module.exports.decode = JWT.decode;
+module.exports.sign   = _JWT.sign;
+module.exports.verify = _JWT.verify;
+module.exports.decode = _JWT.decode;
