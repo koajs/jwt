@@ -103,6 +103,7 @@ If you want to ignore some paths, you have to use `exclude` (`Array`) option:
 app.use(jwt({ secret: 'shared-secret', 
               exclude: ['/connect', '/user/login', '/public']}));
 ```
+All paths in the `exclude` list will be ignored by JWT validation.
 
 ## Related Modules
 
