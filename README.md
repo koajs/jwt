@@ -155,11 +155,12 @@ This code is largely based on [express-jwt](https://github.com/auth0/express-jwt
   - [Matias Woloski](http://github.com/woloski)
 
 ## Contributors
-- [soygul] (https://github.com/soygul)
-- [tunnckoCore] (https://github.com/tunnckoCore)
-- [getuliojr] (https://github.com/getuliojr)
-- [cesarandreu] (https://github.com/cesarandreu)
-- [michaelwestphal] (https://github.com/michaelwestphal)
+- [Foxandxss](https://github.com/Foxandxss)
+- [soygul](https://github.com/soygul)
+- [tunnckoCore](https://github.com/tunnckoCore)
+- [getuliojr](https://github.com/getuliojr)
+- [cesarandreu](https://github.com/cesarandreu)
+- [michaelwestphal](https://github.com/michaelwestphal)
 
 ## License
 
