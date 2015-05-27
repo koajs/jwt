@@ -37,6 +37,7 @@
   "main": "./lib",
   "dependencies": {
     "jsonwebtoken": "~5.0.0",
+    "koa-unless": "0.0.1",
     "thunkify": "~2.1.x"
   },
   "devDependencies": {

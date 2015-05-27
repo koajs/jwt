@@ -185,3 +185,73 @@ describe('success tests', function () {
   });
 
 });
+
+describe('unless tests', function () {
+
+  it('should pass if the route is excluded', function(done) {
+    var validUserResponse = function(res) {
+      if (!(res.body.success === true)) return "koa-jwt is getting fired.";
+    };
+
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, secret);
+
+    var app = koa();
+
+    app.use(koajwt({ secret: secret }).unless({ path: ['/public']}));
+    app.use(function* (next) {
+      this.body = { success: true };
+    });
+
+    request(app.listen())
+      .get('/public')
+      .set('Authorization', 'wrong')
+      .expect(200)
+      .expect(validUserResponse)
+      .end(done);
+  });
+
+  it('should fail if the route is not excluded', function(done) {
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, secret);
+
+    var app = koa();
+
+    app.use(koajwt({ secret: secret }).unless({ path: ['/public']}));
+    app.use(function* (next) {
+      this.body = { success: true };
+    });
+
+    request(app.listen())
+      .get('/private')
+      .set('Authorization', 'wrong')
+      .expect(401)
+      .expect('Bad Authorization header format. Format is "Authorization: Bearer <token>"\n')
+      .end(done);
+  });
+
+  it('should pass if the route is not excluded and the token is present', function(done) {
+    var validUserResponse = function(res) {
+      if (!(res.body.foo === 'bar')) return "Key param not used properly";
+    };
+
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, secret);
+
+    var app = koa();
+
+    app.use(koajwt({ secret: secret, key: 'jwtdata' }).unless({ path: ['/public']}));
+    app.use(function* (next) {
+      this.body = this.state.jwtdata;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(200)
+      .expect(validUserResponse)
+      .end(done);
+
+  });
+
+});
