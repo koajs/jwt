@@ -1,6 +1,7 @@
 var assert   = require('assert');
 var thunkify = require('thunkify');
-var _JWT      = require('jsonwebtoken');
+var _JWT     = require('jsonwebtoken');
+var unless   = require('koa-unless');
 
 // Make verify function play nice with co/koa
 var JWT = {decode: _JWT.decode, sign: _JWT.sign, verify: thunkify(_JWT.verify)};
@@ -11,7 +12,7 @@ module.exports = function(opts) {
 
   assert(opts.secret, '"secret" option is required');
 
-  return function *jwt(next) {
+  var middleware = function *jwt(next) {
     var token, msg, user, parts, scheme, credentials;
 
     if (this.header.authorization) {
@@ -48,6 +49,10 @@ module.exports = function(opts) {
       this.throw(401, msg);
     }
   };
+
+  middleware.unless = unless;
+
+  return middleware;
 };
 
 // Export JWT methods as a convenience

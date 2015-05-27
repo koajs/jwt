@@ -68,7 +68,40 @@ app.listen(3000);
 ```
 
 
-Alternatively, you can add the `passthrough` option to always yield next,
+Alternatively you can conditionally run the `jwt` middleware under certain conditions:
+
+```js
+var koa = require('koa');
+var jwt = require('koa-jwt');
+
+var app = koa();
+
+// Middleware below this line is only reached if JWT token is valid
+// unless the URL starts with '/public'
+app.use(jwt({ secret: 'shared-secret' }).unless({ path: [/^\/public/] }));
+
+// Unprotected middleware
+app.use(function *(next){
+  if (this.url.match(/^\/public/)) {
+    this.body = 'unprotected\n';
+  } else {
+    yield next;
+  }
+});
+
+// Protected middleware
+app.use(function *(){
+  if (this.url.match(/^\/api/)) {
+    this.body = 'protected\n';
+  }
+});
+
+app.listen(3000);
+```
+
+For more information on `unless` exceptions, check [koa-unless](https://github.com/Foxandxss/koa-unless).
+
+You can also add the `passthrough` option to always yield next,
 even if no valid Authorization header was found:
 ```js
 app.use(jwt({ secret: 'shared-secret', passthrough: true }));
