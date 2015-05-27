@@ -131,6 +131,13 @@ var publicKey = fs.readFileSync('/path/to/public.pub');
 app.use(jwt({ secret: publicKey }));
 ```
 
+If you want to ignore some paths, you have to use `exclude` (`Array`) option:
+```js
+app.use(jwt({ secret: 'shared-secret', 
+              exclude: ['/connect', '/user/login', '/public']}));
+```
+All paths in the `exclude` list will be ignored by JWT validation.
+
 ## Related Modules
 
 - [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) — JSON Web Token signing

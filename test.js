@@ -184,6 +184,21 @@ describe('success tests', function () {
 
   });
 
+  it('should exclude path `/token` from JWT validation', function(done) {
+    var app = koa();
+
+    app.use(koajwt({ secret: 'shhhhhh', exclude: ['/token'], debug: true }));
+    app.use(function* (next) {
+      this.body = 'token_hash';
+    });
+
+    request(app.listen())
+      .get('/token')
+      .expect(200)
+      .expect('token_hash')
+      .end(done);
+  });
+
 });
 
 describe('unless tests', function () {

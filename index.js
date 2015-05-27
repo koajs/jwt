@@ -9,12 +9,16 @@ var JWT = {decode: _JWT.decode, sign: _JWT.sign, verify: thunkify(_JWT.verify)};
 module.exports = function(opts) {
   opts = opts || {};
   opts.key = opts.key || 'user';
+  opts.exclude = opts.exclude || [];
 
   assert(opts.secret, '"secret" option is required');
 
   var middleware = function *jwt(next) {
     var token, msg, user, parts, scheme, credentials;
 
+    if ((opts.exclude instanceof Array) && opts.exclude.indexOf(this.url) > -1) {
+      return yield next;
+    }
     if (this.header.authorization) {
       parts = this.header.authorization.split(' ');
       if (parts.length == 2) {

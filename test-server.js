@@ -13,6 +13,7 @@ console.log('You can test the server by issuing curl commands like the following
 console.log('')
 console.log('  curl http://localhost:3000/public/foo            # should succeed (return "unprotected")');
 console.log('  curl http://localhost:3000/api/foo               # should fail (return "401 Unauthorized ...")');
+console.log('  curl http://localhost:3000/token                 # should give a token (this path `/token` is excluded');
 console.log('  curl -H "Authorization: Bearer ' + token + '" http://localhost:3000/api/foo   # should succeed (return "protected")');
 console.log('')
 
@@ -42,11 +43,24 @@ app.use(function *(next){
 });
 
 // Middleware below this line is only reached if JWT token is valid
-app.use(koajwt({ secret: 'secret' }));
+app.use(koajwt({ 
+  secret: 'secret',
+  exclude: ['/token']
+}));
 
-app.use(function *(){
+app.use(function *(next){
   if (this.url.match(/^\/api/)) {
     this.body = 'protected\n';
+  } else {
+    yield next;
+  }
+});
+
+app.use(function *(next) {
+  if (this.url.match(/^\/token/)) {
+    this.body = token;
+  } else {
+    yield next;
   }
 });
 
