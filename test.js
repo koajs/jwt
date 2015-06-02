@@ -68,6 +68,26 @@ describe('failure tests', function () {
       //   assert.equal(err.message, 'invalid signature');
   });
 
+  it('should throw if opts.cookies is set and the specified cookie is not well-formatted jwt', function(done) {
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, secret);
+
+    var app = koa();
+
+    app.use(koajwt({ secret: secret, cookie: 'jwt' }));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Cookie', 'jwt=bad' + token + ';')
+      .expect(401)
+      .expect('Invalid token\n')
+      .end(done);
+
+  });
+
   it('should throw if audience is not expected', function(done) {
     var secret = 'shhhhhh';
     var token = koajwt.sign({foo: 'bar', aud: 'expected-audience'}, secret);
@@ -154,6 +174,30 @@ describe('success tests', function () {
     request(app.listen())
       .get('/')
       .set('Authorization', 'Bearer ' + token)
+      .expect(200)
+      .expect(validUserResponse)
+      .end(done);
+
+  });
+
+  it('should work if opts.cookies is set and the specified cookie contains valid jwt', function(done) {
+    var validUserResponse = function(res) {
+      if (!(res.body.foo === 'bar')) return "Wrong user";
+    }
+
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, secret);
+
+    var app = koa();
+
+    app.use(koajwt({ secret: secret, cookie: 'jwt' }));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Cookie', 'jwt=' + token + ';')
       .expect(200)
       .expect(validUserResponse)
       .end(done);
