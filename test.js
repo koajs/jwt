@@ -8,16 +8,6 @@ var koajwt  = require('./index');
 
 describe('failure tests', function () {
 
-  it('should throw if options not sent', function() {
-    try {
-      koajwt();
-    }
-    catch(e) {
-      assert.ok(e);
-      assert.equal(e.message, '"secret" option is required');
-    }
-  });
-
   it('should throw 401 if no authorization header', function(done) {
     var app = koa();
 
@@ -336,4 +326,5 @@ describe('unless tests', function () {
       .end(done);
 
   });
+  
 });
