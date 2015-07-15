@@ -18,9 +18,18 @@ $ npm install koa-jwt
 ## Usage
 
 The JWT authentication middleware authenticates callers using a JWT
-token.  If the token is valid, `ctx.state.user` (by default) will be set
+token. If the token is valid, `ctx.state.user` (by default) will be set
 with the JSON object decoded to be used by later middleware for
 authorization and access control.
+
+The token is normally provided in a HTTP header (`Authorization`), but it 
+can also be provided in a cookie by setting the `opts.cookie` option
+to the name of the cookie that contains the token. 
+
+Normally you provide a single shared secret in `opts.secret`, but another 
+alternative is to have an earlier middleware set `ctx.state.secret`,
+typically per request. If this property exists, it will be used instead
+of the one in `opts.secret`.
 
 
 ## Example
@@ -126,6 +135,7 @@ If the JWT has an expiration (`exp`), it will be checked.
 
 This module also support tokens signed with public/private key pairs. Instead
 of a secret, you can specify a Buffer with the public key:
+
 ```js
 var publicKey = fs.readFileSync('/path/to/public.pub');
 app.use(jwt({ secret: publicKey }));
@@ -161,6 +171,8 @@ This code is largely based on [express-jwt](https://github.com/auth0/express-jwt
 - [getuliojr](https://github.com/getuliojr)
 - [cesarandreu](https://github.com/cesarandreu)
 - [michaelwestphal](https://github.com/michaelwestphal)
+- [sc0ttyd](https://github.com/sc0ttyd)
+- [Jackong](https://github.com/Jackong)
 
 ## License
 
