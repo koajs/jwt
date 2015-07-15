@@ -10,12 +10,13 @@ module.exports = function(opts) {
   opts = opts || {};
   opts.key = opts.key || 'user';
 
-  assert(opts.secret, '"secret" option is required');
-
   var middleware = function *jwt(next) {
-    var token, msg, user, parts, scheme, credentials;
+    var token, msg, user, parts, scheme, credentials, secret;
 
-    if (this.header.authorization) {
+    if (opts.cookie && this.cookies.get(opts.cookie)) {
+      token = this.cookies.get(opts.cookie);
+
+    } else if (this.header.authorization) {
       parts = this.header.authorization.split(' ');
       if (parts.length == 2) {
         scheme = parts[0];
@@ -35,8 +36,13 @@ module.exports = function(opts) {
       }
     }
 
+    secret = (this.state && this.state.secret) ? this.state.secret : opts.secret;
+    if (!secret) {
+      this.throw(401, 'Invalid secret\n');
+    }
+
     try {
-      user = yield JWT.verify(token, opts.secret, opts);
+      user = yield JWT.verify(token, secret, opts);
     } catch(e) {
       msg = 'Invalid token' + (opts.debug ? ' - ' + e.message + '\n' : '\n');
     }

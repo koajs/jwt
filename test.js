@@ -8,16 +8,6 @@ var koajwt  = require('./index');
 
 describe('failure tests', function () {
 
-  it('should throw if options not sent', function() {
-    try {
-      koajwt();
-    }
-    catch(e) {
-      assert.ok(e);
-      assert.equal(e.message, '"secret" option is required');
-    }
-  });
-
   it('should throw 401 if no authorization header', function(done) {
     var app = koa();
 
@@ -68,6 +58,26 @@ describe('failure tests', function () {
       //   assert.equal(err.message, 'invalid signature');
   });
 
+  it('should throw if opts.cookies is set and the specified cookie is not well-formatted jwt', function(done) {
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, secret);
+
+    var app = koa();
+
+    app.use(koajwt({ secret: secret, cookie: 'jwt' }));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Cookie', 'jwt=bad' + token + ';')
+      .expect(401)
+      .expect('Invalid token\n')
+      .end(done);
+
+  });
+
   it('should throw if audience is not expected', function(done) {
     var secret = 'shhhhhh';
     var token = koajwt.sign({foo: 'bar', aud: 'expected-audience'}, secret);
@@ -113,6 +123,35 @@ describe('failure tests', function () {
       .end(done);
   });
 
+  it('should throw if secret neither provide by options and middleware', function (done) {
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar', iss: 'http://foo' }, secret);
+
+    var app = koa();
+
+    app.use(koajwt({debug: true}));
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(401)
+      .expect('Invalid secret\n')
+      .end(done);
+  });
+
+  it('should throw if secret both provide by options(right secret) and middleware(wrong secret)', function (done) {
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar', iss: 'http://foo' }, secret);
+
+    var app = koa();
+
+    app.use(koajwt({secret: 'wrong secret', debug: true}));
+    request(app.listen())
+        .get('/')
+        .set('Authorization', 'Bearer ' + token)
+        .expect(401)
+        .expect('Invalid token - invalid signature\n')
+        .end(done);
+  });
 
 });
 
@@ -160,6 +199,30 @@ describe('success tests', function () {
 
   });
 
+  it('should work if opts.cookies is set and the specified cookie contains valid jwt', function(done) {
+    var validUserResponse = function(res) {
+      if (!(res.body.foo === 'bar')) return "Wrong user";
+    }
+
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, secret);
+
+    var app = koa();
+
+    app.use(koajwt({ secret: secret, cookie: 'jwt' }));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Cookie', 'jwt=' + token + ';')
+      .expect(200)
+      .expect(validUserResponse)
+      .end(done);
+
+  });
+
   it('should use provided key for decoded data', function(done) {
     var validUserResponse = function(res) {
       if (!(res.body.foo === 'bar')) return "Key param not used properly";
@@ -184,6 +247,60 @@ describe('success tests', function () {
 
   });
 
+  it('should work if secret is provided by middleware', function (done) {
+    var validUserResponse = function(res) {
+      if (!(res.body.foo === 'bar')) return "Wrong user";
+    };
+
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, secret);
+
+    var app = koa();
+
+    app.use(function *(next) {
+        this.state.secret = secret;
+        yield next;
+    });
+    app.use(koajwt());
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+        .get('/')
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
+        .expect(validUserResponse)
+        .end(done);
+  });
+
+
+  it('should use middleware secret if both middleware and options provided', function (done) {
+    var validUserResponse = function(res) {
+      if (!(res.body.foo === 'bar')) return "Wrong user";
+    };
+
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, secret);
+
+    var app = koa();
+
+    app.use(function *(next) {
+      this.state.secret = secret;
+      yield next;
+    });
+    app.use(koajwt({secret: 'wrong secret'}));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+        .get('/')
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
+        .expect(validUserResponse)
+        .end(done);
+  });
 });
 
 describe('unless tests', function () {
@@ -253,5 +370,5 @@ describe('unless tests', function () {
       .end(done);
 
   });
-
+  
 });
