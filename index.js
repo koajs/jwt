@@ -15,7 +15,10 @@ module.exports = function(opts) {
   var middleware = function *jwt(next) {
     var token, msg, user, parts, scheme, credentials;
 
-    if (this.header.authorization) {
+    if (opts.cookie && this.cookies.get(opts.cookie)) {
+      token = this.cookies.get(opts.cookie);
+
+    } else if (this.header.authorization) {
       parts = this.header.authorization.split(' ');
       if (parts.length == 2) {
         scheme = parts[0];
