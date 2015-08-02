@@ -38,11 +38,22 @@ module.exports = function(opts) {
 
     secret = (this.state && this.state.secret) ? this.state.secret : opts.secret;
     if (!secret) {
-      this.throw(401, 'Invalid secret\n');
+      this.throw(500, 'Invalid secret\n');
     }
 
+    //prevent to change original options
+    var options = {};
+    for (var key in opts) {
+      if (opts.hasOwnProperty(key)) {
+        options[key] = opts[key];
+      }
+    }
+    //use dynamic issuer and audience if they are exist
+    options.issuer = this.state.issuer ? this.state.issuer : opts.issuer;
+    options.audience = this.state.audience ? this.state.audience : opts.audience;
+
     try {
-      user = yield JWT.verify(token, secret, opts);
+      user = yield JWT.verify(token, secret, options);
     } catch(e) {
       msg = 'Invalid token' + (opts.debug ? ' - ' + e.message + '\n' : '\n');
     }

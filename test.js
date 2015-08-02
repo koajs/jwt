@@ -93,6 +93,25 @@ describe('failure tests', function () {
       .end(done);
   });
 
+  it('should throw if audience is not expected as provided by middleware', function (done) {
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar', aud: 'expected-audience'}, secret);
+
+    var app = koa();
+
+    app.use(function* (next) {
+      this.state.audience = 'not-expected-audience';
+      yield next;
+    });
+    app.use(koajwt({ secret: 'shhhhhh', audience: 'expected-audience', debug: true }));
+    request(app.listen())
+        .get('/')
+        .set('Authorization', 'Bearer ' + token)
+        .expect(401)
+        .expect('Invalid token - jwt audience invalid. expected: not-expected-audience\n')
+        .end(done);
+  });
+
   it('should throw if token is expired', function(done) {
     var secret = 'shhhhhh';
     var token = koajwt.sign({foo: 'bar', exp: 1382412921 }, secret);
@@ -123,17 +142,44 @@ describe('failure tests', function () {
       .end(done);
   });
 
-  it('should throw if secret neither provide by options and middleware', function (done) {
+  it('should throw if token issuer is not expected as provided by middleware', function(done) {
     var secret = 'shhhhhh';
     var token = koajwt.sign({foo: 'bar', iss: 'http://foo' }, secret);
 
     var app = koa();
 
+    app.use(function* (next) {
+      this.state.issuer = 'http://wrong';
+      yield next;
+    });
+    app.use(koajwt({ secret: 'shhhhhh', issuer: 'http://foo', debug: true }));
+    request(app.listen())
+        .get('/')
+        .set('Authorization', 'Bearer ' + token)
+        .expect(401)
+        .expect('Invalid token - jwt issuer invalid. expected: http://wrong\n')
+        .end(done);
+  });
+
+  it('should throw if secret neither provide by options and middleware', function (done) {
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar', iss: 'http://foo' }, secret);
+
+    var app = koa();
+    app.use(function *(next) {
+        try {
+          yield next;
+        } catch(err) {
+          this.status = err.status;
+          this.body = err.message;
+        }
+    });
+
     app.use(koajwt({debug: true}));
     request(app.listen())
       .get('/')
       .set('Authorization', 'Bearer ' + token)
-      .expect(401)
+      .expect(500)
       .expect('Invalid secret\n')
       .end(done);
   });
