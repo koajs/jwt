@@ -29,6 +29,7 @@ module.exports = function(opts) {
         if (!opts.passthrough) {
           this.throw(401, 'Bad Authorization header format. Format is "Authorization: Bearer <token>"\n');
         }
+        token = parts[0];
       }
     } else {
       if (!opts.passthrough) {
