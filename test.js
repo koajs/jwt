@@ -465,5 +465,37 @@ describe('verify tests', function() {
 
   });
 
+  it('should continue if `passthrough` is true', function(done) {
+    var app = koa();
 
+    app.use(koajwt({ passthrough: true, debug: true, verify: false }));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+        .get('/')
+        .expect(204) // No content
+        .expect('')
+        .end(done);
+  });
+
+  it('should continue if decode fails but `passthrough` is true', function(done) {
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, secret);
+
+    var app = koa();
+
+    app.use(koajwt({ passthrough: true, cookie: 'jwt', verify: false }));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+        .get('/')
+        .set('Cookie', 'jwt=bad' + token + ';')
+        .expect(204) // No content
+        .expect('')
+        .end(done);
+  });
 });
