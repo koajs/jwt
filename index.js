@@ -8,7 +8,7 @@ var JWT = {decode: _JWT.decode, sign: _JWT.sign, verify: thunkify(_JWT.verify)};
 
 module.exports = function(opts) {
   opts = opts || {};
-  if (typeof opts.verify == 'undefined') {
+  if (typeof opts.verify === 'undefined') {
     opts.verify = true;
   }
 

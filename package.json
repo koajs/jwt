@@ -1,6 +1,6 @@
 {
-  "name": "koa-jwt",
-  "version": "1.1.1",
+  "name": "@pluralsight/ps-koa-jwt",
+  "version": "1.1.3",
   "description": "Koa JWT authentication middleware.",
   "keywords": [
     "auth",
@@ -18,10 +18,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/stiang/koa-jwt.git"
+    "url": "git://github.com/sangyum/koa-jwt.git"
   },
   "bugs": {
-    "url": "http://github.com/stiang/koa-jwt/issues"
+    "url": "https://github.com/sangyum/koa-jwt/issues"
   },
   "author": {
     "name": "Stian Grytøyr",
