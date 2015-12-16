@@ -1,17 +1,17 @@
 var TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIiLCJpYXQiOjE0MjY1NDY5MTl9.ETgkTn8BaxIX4YqvUWVFPmum3moNZ7oARZtSBXb_vP4';
 
-var koa     = require('koa');
+var koa = require('koa');
 var request = require('supertest');
-var assert  = require('assert');
+var assert = require('assert');
 
-var koajwt  = require('./index');
+var koajwt = require('./index');
 
-describe('failure tests', function () {
+describe('failure tests', function() {
 
   it('should throw 401 if no authorization header', function(done) {
     var app = koa();
 
-    app.use(koajwt({ secret: 'shhhh' }));
+    app.use(koajwt({secret: 'shhhh'}));
     request(app.listen())
     .get('/')
     .expect(401)
@@ -21,7 +21,7 @@ describe('failure tests', function () {
   it('should return 401 if authorization header is malformed', function(done) {
     var app = koa();
 
-    app.use(koajwt({ secret: 'shhhh' }));
+    app.use(koajwt({secret: 'shhhh'}));
     request(app.listen())
     .get('/')
     .set('Authorization', 'wrong')
@@ -33,7 +33,7 @@ describe('failure tests', function () {
   it('should throw if authorization header is not well-formatted jwt', function(done) {
     var app = koa();
 
-    app.use(koajwt({ secret: 'shhhh' }));
+    app.use(koajwt({secret: 'shhhh'}));
     request(app.listen())
     .get('/')
     .set('Authorization', 'Bearer wrongjwt')
@@ -48,7 +48,7 @@ describe('failure tests', function () {
 
     var app = koa();
 
-    app.use(koajwt({ secret: 'different-shhhh', debug: true }));
+    app.use(koajwt({secret: 'different-shhhh', debug: true}));
     request(app.listen())
     .get('/')
     .set('Authorization', 'Bearer ' + token)
@@ -64,7 +64,7 @@ describe('failure tests', function () {
 
     var app = koa();
 
-    app.use(koajwt({ secret: secret, cookie: 'jwt' }));
+    app.use(koajwt({secret: secret, cookie: 'jwt'}));
     app.use(function* (next) {
       this.body = this.state.user;
     });
@@ -84,7 +84,7 @@ describe('failure tests', function () {
 
     var app = koa();
 
-    app.use(koajwt({ secret: 'shhhhhh', audience: 'not-expected-audience', debug: true }));
+    app.use(koajwt({secret: 'shhhhhh', audience: 'not-expected-audience', debug: true}));
     request(app.listen())
     .get('/')
     .set('Authorization', 'Bearer ' + token)
@@ -95,11 +95,11 @@ describe('failure tests', function () {
 
   it('should throw if token is expired', function(done) {
     var secret = 'shhhhhh';
-    var token = koajwt.sign({foo: 'bar', exp: 1382412921 }, secret);
+    var token = koajwt.sign({foo: 'bar', exp: 1382412921}, secret);
 
     var app = koa();
 
-    app.use(koajwt({ secret: 'shhhhhh', debug: true }));
+    app.use(koajwt({secret: 'shhhhhh', debug: true}));
     request(app.listen())
     .get('/')
     .set('Authorization', 'Bearer ' + token)
@@ -110,11 +110,11 @@ describe('failure tests', function () {
 
   it('should throw if token issuer is wrong', function(done) {
     var secret = 'shhhhhh';
-    var token = koajwt.sign({foo: 'bar', iss: 'http://foo' }, secret);
+    var token = koajwt.sign({foo: 'bar', iss: 'http://foo'}, secret);
 
     var app = koa();
 
-    app.use(koajwt({ secret: 'shhhhhh', issuer: 'http://wrong', debug: true }));
+    app.use(koajwt({secret: 'shhhhhh', issuer: 'http://wrong', debug: true}));
     request(app.listen())
     .get('/')
     .set('Authorization', 'Bearer ' + token)
@@ -123,9 +123,9 @@ describe('failure tests', function () {
     .end(done);
   });
 
-  it('should throw if secret neither provide by options and middleware', function (done) {
+  it('should throw if secret neither provide by options and middleware', function(done) {
     var secret = 'shhhhhh';
-    var token = koajwt.sign({foo: 'bar', iss: 'http://foo' }, secret);
+    var token = koajwt.sign({foo: 'bar', iss: 'http://foo'}, secret);
 
     var app = koa();
 
@@ -138,9 +138,9 @@ describe('failure tests', function () {
     .end(done);
   });
 
-  it('should throw if secret both provide by options(right secret) and middleware(wrong secret)', function (done) {
+  it('should throw if secret both provide by options(right secret) and middleware(wrong secret)', function(done) {
     var secret = 'shhhhhh';
-    var token = koajwt.sign({foo: 'bar', iss: 'http://foo' }, secret);
+    var token = koajwt.sign({foo: 'bar', iss: 'http://foo'}, secret);
 
     var app = koa();
 
@@ -155,11 +155,11 @@ describe('failure tests', function () {
 
 });
 
-describe('passthrough tests', function () {
+describe('passthrough tests', function() {
   it('should continue if `passthrough` is true', function(done) {
     var app = koa();
 
-    app.use(koajwt({ secret: 'shhhhhh', passthrough: true, debug: true }));
+    app.use(koajwt({secret: 'shhhhhh', passthrough: true, debug: true}));
     app.use(function* (next) {
       this.body = this.state.user;
     });
@@ -174,7 +174,7 @@ describe('passthrough tests', function () {
   it('should continue if `passthrough` is a RegExp and the path matches', function(done) {
     var app = koa();
 
-    app.use(koajwt({ secret: 'shhhhhh', passthrough: /^\/passthrough/, debug: true }));
+    app.use(koajwt({secret: 'shhhhhh', passthrough: /^\/passthrough/, debug: true}));
     app.use(function* (next) {
       this.body = this.state.user;
     });
@@ -189,7 +189,7 @@ describe('passthrough tests', function () {
   it('should not continue if `passthrough` is a RegExp and the path does not match', function(done) {
     var app = koa();
 
-    app.use(koajwt({ secret: 'shhhhhh', passthrough: /^\/passthrough/, debug: true }));
+    app.use(koajwt({secret: 'shhhhhh', passthrough: /^\/passthrough/, debug: true}));
     app.use(function* (next) {
       this.body = this.state.user;
     });
@@ -202,8 +202,7 @@ describe('passthrough tests', function () {
   });
 });
 
-
-describe('success tests', function () {
+describe('success tests', function() {
 
   it('should work if authorization header is valid jwt', function(done) {
     var validUserResponse = function(res) {
@@ -215,7 +214,7 @@ describe('success tests', function () {
 
     var app = koa();
 
-    app.use(koajwt({ secret: secret }));
+    app.use(koajwt({secret: secret}));
     app.use(function* (next) {
       this.body = this.state.user;
     });
@@ -239,7 +238,7 @@ describe('success tests', function () {
 
     var app = koa();
 
-    app.use(koajwt({ secret: secret, cookie: 'jwt' }));
+    app.use(koajwt({secret: secret, cookie: 'jwt'}));
     app.use(function* (next) {
       this.body = this.state.user;
     });
@@ -263,7 +262,7 @@ describe('success tests', function () {
 
     var app = koa();
 
-    app.use(koajwt({ secret: secret }));
+    app.use(koajwt({secret: secret}));
     app.use(function* (next) {
       this.body = this.state.user;
     });
@@ -287,7 +286,7 @@ describe('success tests', function () {
 
     var app = koa();
 
-    app.use(koajwt({ secret: secret, key: 'jwtdata' }));
+    app.use(koajwt({secret: secret, key: 'jwtdata'}));
     app.use(function* (next) {
       this.body = this.state.jwtdata;
     });
@@ -301,7 +300,7 @@ describe('success tests', function () {
 
   });
 
-  it('should work if secret is provided by middleware', function (done) {
+  it('should work if secret is provided by middleware', function(done) {
     var validUserResponse = function(res) {
       if (!(res.body.foo === 'bar')) return "Wrong user";
     };
@@ -328,8 +327,7 @@ describe('success tests', function () {
     .end(done);
   });
 
-
-  it('should use middleware secret if both middleware and options provided', function (done) {
+  it('should use middleware secret if both middleware and options provided', function(done) {
     var validUserResponse = function(res) {
       if (!(res.body.foo === 'bar')) return "Wrong user";
     };
@@ -357,7 +355,7 @@ describe('success tests', function () {
   });
 });
 
-describe('unless tests', function () {
+describe('unless tests', function() {
 
   it('should pass if the route is excluded', function(done) {
     var validUserResponse = function(res) {
@@ -369,9 +367,9 @@ describe('unless tests', function () {
 
     var app = koa();
 
-    app.use(koajwt({ secret: secret }).unless({ path: ['/public']}));
+    app.use(koajwt({secret: secret}).unless({path: ['/public']}));
     app.use(function* (next) {
-      this.body = { success: true };
+      this.body = {success: true};
     });
 
     request(app.listen())
@@ -388,9 +386,9 @@ describe('unless tests', function () {
 
     var app = koa();
 
-    app.use(koajwt({ secret: secret }).unless({ path: ['/public']}));
+    app.use(koajwt({secret: secret}).unless({path: ['/public']}));
     app.use(function* (next) {
-      this.body = { success: true };
+      this.body = {success: true};
     });
 
     request(app.listen())
@@ -411,7 +409,7 @@ describe('unless tests', function () {
 
     var app = koa();
 
-    app.use(koajwt({ secret: secret, key: 'jwtdata' }).unless({ path: ['/public']}));
+    app.use(koajwt({secret: secret, key: 'jwtdata'}).unless({path: ['/public']}));
     app.use(function* (next) {
       this.body = this.state.jwtdata;
     });
