@@ -1,7 +1,7 @@
 var thunkify = require('thunkify');
-var _JWT = require('jsonwebtoken');
-var unless = require('koa-unless');
-var url = require('url');
+var _JWT     = require('jsonwebtoken');
+var unless   = require('koa-unless');
+var url      = require('url');
 
 // Make verify function play nice with co/koa
 var JWT = {decode: _JWT.decode, sign: _JWT.sign, verify: thunkify(_JWT.verify)};
@@ -23,7 +23,7 @@ module.exports = function(opts) {
       token = this.cookies.get(opts.cookie);
 
       if (!token && !passthrough && !this.header.authorization) {
-        this.throw(401, 'No Authorization cookie or header found\n');
+        this.throw(401, 'Bad Authorization header format. Format is "Authorization: Bearer <token>"\n');
       }
     }
 
@@ -75,6 +75,6 @@ module.exports = function(opts) {
 };
 
 // Export JWT methods as a convenience
-module.exports.sign = _JWT.sign;
+module.exports.sign   = _JWT.sign;
 module.exports.verify = _JWT.verify;
 module.exports.decode = _JWT.decode;
