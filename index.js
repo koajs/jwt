@@ -1,4 +1,3 @@
-var assert   = require('assert');
 var thunkify = require('thunkify');
 var _JWT     = require('jsonwebtoken');
 var unless   = require('koa-unless');
