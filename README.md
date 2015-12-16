@@ -116,6 +116,12 @@ even if no valid Authorization header was found:
 app.use(jwt({ secret: 'shared-secret', passthrough: true }));
 ```
 This lets downstream middleware make decisions based on whether `ctx.state.user` is set.
+Passing a RegExp to passthrough instead of true allows you to only enable passthrough for 
+paths that match the RegExp. For example, to enable passthrough only on /passthrough:
+
+```js
+app.use(jwt({ secret: 'shared-secret', passthrough: /^\/passthrough$/ }));
+```
 
 
 If you prefer to use another ctx key for the decoded data, just pass in `key`, like so:
