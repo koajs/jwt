@@ -31,6 +31,7 @@ alternative is to have an earlier middleware set `ctx.state.secret`,
 typically per request. If this property exists, it will be used instead
 of the one in `opts.secret`.
 
+In addition, you can bypass verification of jwt by setting `opts.verify` to `false`.
 
 ## Example
 

@@ -172,7 +172,6 @@ describe('passthrough tests', function () {
   });
 });
 
-
 describe('success tests', function () {
 
   it('should work if authorization header is valid jwt', function(done) {
@@ -370,5 +369,133 @@ describe('unless tests', function () {
       .end(done);
 
   });
-  
+
+});
+
+describe('verify tests', function() {
+
+  it('should verify token by default', function(done) {
+    var validUserResponse = function(res) {
+      if (!(res.body.foo === 'bar')) return "Wrong user";
+    }
+
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, secret);
+
+    var app = koa();
+
+    app.use(koajwt({ secret: secret }));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+        .get('/')
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
+        .expect(validUserResponse)
+        .end(done);
+
+  });
+
+  it('should verify token by default - bad token', function(done) {
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, secret);
+
+    var app = koa();
+
+    app.use(koajwt({ secret: secret, cookie: 'jwt' }));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+        .get('/')
+        .set('Cookie', 'jwt=bad' + token + ';')
+        .expect(401)
+        .expect('Invalid token\n')
+        .end(done);
+  });
+
+  it('should simply decode Authorization token if opted not to verify', function(done) {
+    var validUserResponse = function(res) {
+      if (!(res.body.foo === 'bar')) return "Wrong user";
+    }
+
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, secret);
+
+    var app = koa();
+
+    app.use(koajwt({ verify: false }));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+        .get('/')
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
+        .expect(validUserResponse)
+        .end(done);
+
+  });
+
+  it('should simply decode token from cookie if opted not to verify', function(done) {
+    var validUserResponse = function(res) {
+      if (!(res.body.foo === 'bar')) return "Wrong user";
+    }
+
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, secret);
+
+    var app = koa();
+
+    app.use(koajwt({ cookie: 'jwt', verify: false }));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+        .get('/')
+        .set('Cookie', 'jwt=' + token + ';')
+        .expect(200)
+        .expect(validUserResponse)
+        .end(done);
+
+  });
+
+  it('should continue if `passthrough` is true', function(done) {
+    var app = koa();
+
+    app.use(koajwt({ passthrough: true, debug: true, verify: false }));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+        .get('/')
+        .expect(204) // No content
+        .expect('')
+        .end(done);
+  });
+
+  it('should continue if decode fails but `passthrough` is true', function(done) {
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, secret);
+
+    var app = koa();
+
+    app.use(koajwt({ passthrough: true, cookie: 'jwt', verify: false }));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+        .get('/')
+        .set('Cookie', 'jwt=bad' + token + ';')
+        .expect(204) // No content
+        .expect('')
+        .end(done);
+  });
 });

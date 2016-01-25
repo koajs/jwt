@@ -8,6 +8,10 @@ var JWT = {decode: _JWT.decode, sign: _JWT.sign, verify: thunkify(_JWT.verify)};
 
 module.exports = function(opts) {
   opts = opts || {};
+  if (typeof opts.verify === 'undefined') {
+    opts.verify = true;
+  }
+
   opts.key = opts.key || 'user';
 
   var middleware = function *jwt(next) {
@@ -36,15 +40,23 @@ module.exports = function(opts) {
       }
     }
 
-    secret = (this.state && this.state.secret) ? this.state.secret : opts.secret;
-    if (!secret) {
-      this.throw(401, 'Invalid secret\n');
-    }
+    if (opts.verify) {
+      secret = (this.state && this.state.secret) ? this.state.secret : opts.secret;
+      if (!secret) {
+        this.throw(401, 'Invalid secret\n');
+      }
 
-    try {
-      user = yield JWT.verify(token, secret, opts);
-    } catch(e) {
-      msg = 'Invalid token' + (opts.debug ? ' - ' + e.message + '\n' : '\n');
+      try {
+        user = yield JWT.verify(token, secret, opts);
+      } catch(e) {
+        msg = 'Invalid token' + (opts.debug ? ' - ' + e.message + '\n' : '\n');
+      }
+    } else {
+      try {
+        user = yield JWT.decode(token);
+      } catch(e) {
+        msg = 'Invalid token' + (opts.debug ? ' - ' + e.message + '\n' : '\n');
+      }
     }
 
     if (user || opts.passthrough) {
