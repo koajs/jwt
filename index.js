@@ -38,7 +38,7 @@ module.exports = function(opts) {
 
     secret = (this.state && this.state.secret) ? this.state.secret : opts.secret;
     if (!secret) {
-      this.throw(401, 'Invalid secret\n');
+      this.throw(500, 'Invalid secret\n');
     }
 
     try {
