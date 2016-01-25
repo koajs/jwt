@@ -30,6 +30,8 @@ module.exports = function(opts) {
           this.throw(401, 'Bad Authorization header format. Format is "Authorization: Bearer <token>"\n');
         }
       }
+    } else if (this.query && this.query.access_token) {
+      token = this.query.access_token;
     } else {
       if (!opts.passthrough) {
         this.throw(401, 'No Authorization header found\n');
