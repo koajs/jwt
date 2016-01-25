@@ -18,11 +18,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/stiang/koa-jwt.git"
+    "url": "git://github.com/koajs/jwt.git"
   },
   "bugs": {
-    "url": "http://github.com/stiang/koa-jwt/issues"
+    "url": "https://github.com/koajs/jwt/issues"
   },
+  "homepage": "https://github.com/koajs/jwt",
   "author": {
     "name": "Stian Grytøyr",
     "email": "stian@grytoyr.net",
