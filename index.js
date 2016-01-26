@@ -1,7 +1,7 @@
-var assert   = require('assert');
 var thunkify = require('thunkify');
 var _JWT     = require('jsonwebtoken');
 var unless   = require('koa-unless');
+var url      = require('url');
 
 // Make verify function play nice with co/koa
 var JWT = {decode: _JWT.decode, sign: _JWT.sign, verify: thunkify(_JWT.verify)};
@@ -11,28 +11,41 @@ module.exports = function(opts) {
   opts.key = opts.key || 'user';
 
   var middleware = function *jwt(next) {
-    var token, msg, user, parts, scheme, credentials, secret;
+    var token, msg, user, parts, scheme, credentials, secret, passthrough;
 
-    if (opts.cookie && this.cookies.get(opts.cookie)) {
+    if (opts.passthrough instanceof RegExp) {
+      passthrough = opts.passthrough.test(url.parse(this.url).pathname || '');
+    } else {
+      passthrough = opts.passthrough;
+    }
+
+    if (opts.cookie) {
       token = this.cookies.get(opts.cookie);
 
-    } else if (this.header.authorization) {
-      parts = this.header.authorization.split(' ');
-      if (parts.length == 2) {
-        scheme = parts[0];
-        credentials = parts[1];
+      if (!token && !passthrough && !this.header.authorization) {
+        this.throw(401, 'Bad Authorization header format. Format is "Authorization: Bearer <token>"\n');
+      }
+    }
 
-        if (/^Bearer$/i.test(scheme)) {
-          token = credentials;
+    if (!token) {
+      if (this.header.authorization) {
+        parts = this.header.authorization.split(' ');
+        if (parts.length == 2) {
+          scheme = parts[0];
+          credentials = parts[1];
+
+          if (/^Bearer$/i.test(scheme)) {
+            token = credentials;
+          }
+        } else {
+          if (!passthrough) {
+            this.throw(401, 'Bad Authorization header format. Format is "Authorization: Bearer <token>"\n');
+          }
         }
       } else {
-        if (!opts.passthrough) {
-          this.throw(401, 'Bad Authorization header format. Format is "Authorization: Bearer <token>"\n');
+        if (!passthrough) {
+          this.throw(401, 'No Authorization header found\n');
         }
-      }
-    } else {
-      if (!opts.passthrough) {
-        this.throw(401, 'No Authorization header found\n');
       }
     }
 
@@ -47,7 +60,7 @@ module.exports = function(opts) {
       msg = 'Invalid token' + (opts.debug ? ' - ' + e.message + '\n' : '\n');
     }
 
-    if (user || opts.passthrough) {
+    if (user || passthrough) {
       this.state = this.state || {};
       this.state[opts.key] = user;
       yield next;
