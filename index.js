@@ -14,7 +14,7 @@ module.exports = function(opts) {
     var token, msg, user, parts, scheme, credentials, secret, passthrough;
 
     if (opts.passthrough instanceof RegExp) {
-      passthrough = opts.passthrough.test(url.parse(this.url).pathname || '', true);
+      passthrough = opts.passthrough.test(url.parse(this.url).pathname || '');
     } else {
       passthrough = opts.passthrough;
     }
