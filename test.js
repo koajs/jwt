@@ -133,7 +133,7 @@ describe('failure tests', function () {
     request(app.listen())
       .get('/')
       .set('Authorization', 'Bearer ' + token)
-      .expect(401)
+      .expect(500)
       .expect('Invalid secret\n')
       .end(done);
   });
@@ -370,5 +370,5 @@ describe('unless tests', function () {
       .end(done);
 
   });
-  
+
 });
