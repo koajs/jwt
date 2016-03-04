@@ -30,6 +30,33 @@ describe('failure tests', function () {
       .end(done);
   });
 
+  it('should allow provided getToken function to throw', function(done) {
+    var app = koa();
+
+    app.use(koajwt({ secret: 'shhhh', getToken: function() {
+      this.throw(401, 'Bad Authorization\n');
+    } }));
+    request(app.listen())
+      .get('/')
+      .expect(401)
+      .expect('Bad Authorization\n')
+      .end(done);
+  });
+
+  it('should throw if getToken function returns invalid jwt', function(done) {
+    var app = koa();
+
+    app.use(koajwt({ secret: 'shhhhhh', getToken: function() {
+      var secret = 'bad';
+      return koajwt.sign({foo: 'bar'}, secret);
+    } }));
+    request(app.listen())
+      .get('/')
+      .expect(401)
+      .expect('Invalid token\n')
+      .end(done);
+  });
+
   it('should throw if authorization header is not well-formatted jwt', function(done) {
     var app = koa();
 
@@ -133,8 +160,8 @@ describe('failure tests', function () {
     request(app.listen())
       .get('/')
       .set('Authorization', 'Bearer ' + token)
-      .expect(401)
-      .expect('Invalid secret\n')
+      .expect(500)
+      .expect('Internal Server Error')
       .end(done);
   });
 
@@ -197,6 +224,29 @@ describe('success tests', function () {
       .expect(validUserResponse)
       .end(done);
 
+  });
+
+  it('should work if the provided getToken function returns a valid jwt', function(done) {
+    var validUserResponse = function(res) {
+      if (!(res.body.foo === 'bar')) return "Wrong user";
+    }
+
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, secret);
+
+    var app = koa();
+    app.use(koajwt({ secret: secret, getToken: function() {
+      return this.request.query.token;
+    }}));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+      .get('/?token=' + token)
+      .expect(200)
+      .expect(validUserResponse)
+      .end(done);
   });
 
   it('should work if opts.cookies is set and the specified cookie contains valid jwt', function(done) {
@@ -370,5 +420,5 @@ describe('unless tests', function () {
       .end(done);
 
   });
-  
+
 });
