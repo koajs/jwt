@@ -24,7 +24,9 @@ authorization and access control.
 
 The token is normally provided in a HTTP header (`Authorization`), but it
 can also be provided in a cookie by setting the `opts.cookie` option
-to the name of the cookie that contains the token. Custom token retrieval can also be done through the `opts.getToken` option. The provided function is called in the normal Koa context and should return the retrieved token.
+to the name of the cookie that contains the token. Custom token retrieval 
+can also be done through the `opts.getToken` option. The provided function 
+is called in the normal Koa context and should return the retrieved token.
 
 Normally you provide a single shared secret in `opts.secret`, but another
 alternative is to have an earlier middleware set `ctx.state.secret`,
@@ -173,6 +175,7 @@ This code is largely based on [express-jwt](https://github.com/auth0/express-jwt
 - [michaelwestphal](https://github.com/michaelwestphal)
 - [sc0ttyd](https://github.com/sc0ttyd)
 - [Jackong](https://github.com/Jackong)
+- [danwkennedy](https://github.com/danwkennedy)
 
 ## License
 
