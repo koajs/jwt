@@ -22,11 +22,11 @@ token. If the token is valid, `ctx.state.user` (by default) will be set
 with the JSON object decoded to be used by later middleware for
 authorization and access control.
 
-The token is normally provided in a HTTP header (`Authorization`), but it 
+The token is normally provided in a HTTP header (`Authorization`), but it
 can also be provided in a cookie by setting the `opts.cookie` option
-to the name of the cookie that contains the token. 
+to the name of the cookie that contains the token. Custom token retrieval can also be done through the `opts.getToken` option. The provided function is called in the normal Koa context and should return the retrieved token.
 
-Normally you provide a single shared secret in `opts.secret`, but another 
+Normally you provide a single shared secret in `opts.secret`, but another
 alternative is to have an earlier middleware set `ctx.state.secret`,
 typically per request. If this property exists, it will be used instead
 of the one in `opts.secret`.
