@@ -13,7 +13,9 @@ module.exports = function(opts) {
   var middleware = function *jwt(next) {
     var token, msg, user, parts, scheme, credentials, secret;
 
-    if (opts.cookie && this.cookies.get(opts.cookie)) {
+    if (opts.getToken) {
+      token = opts.getToken.call(this);
+    } else if (opts.cookie && this.cookies.get(opts.cookie)) {
       token = this.cookies.get(opts.cookie);
 
     } else if (this.header.authorization) {
