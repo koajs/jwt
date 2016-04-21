@@ -6,8 +6,7 @@ Koa middleware that validates JSON Web Tokens and sets `ctx.state.user`
 This module lets you authenticate HTTP requests using JSON Web Tokens
 in your [Koa](http://koajs.com/) (node.js) applications.
 
-See [this article](http://blog.auth0.com/2014/01/07/angularjs-authentication-with-cookies-vs-token/)
-for a good introduction.
+See [this article](http://blog.auth0.com/2014/01/07/angularjs-authentication-with-cookies-vs-token/) (Angular) or [this one](https://medium.com/@leo/why-json-web-tokens-are-truly-awesome-23fb80b7fc20#.w47xi19k1) (Ember) for a good introduction.
 
 ## Install
 
