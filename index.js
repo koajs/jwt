@@ -58,6 +58,17 @@ module.exports = function(opts) {
   return middleware;
 };
 
+
+/**
+ * resolveAuthorizationHeader - Attempts to parse the token from the Authorization header
+ *
+ * This function checks the Authorization header for a `Bearer <token>` pattern and return the token section
+ *
+ * @this The ctx object passed to the middleware
+ *
+ * @param  {object}      opts The middleware's options
+ * @return {String|null}      The resolved token or null if not found
+ */
 function resolveAuthorizationHeader(opts) {
   if (!this.header || !this.header.authorization) {
     return;
@@ -79,6 +90,17 @@ function resolveAuthorizationHeader(opts) {
   }
 }
 
+
+/**
+ * resolveCookies - Attempts to retrieve the token from a cookie
+ *
+ * This function uses the opts.cookie option to retrieve the token
+ *
+ * @this The ctx object passed to the middleware
+ *
+ * @param  {object}      opts This middleware's options
+ * @return {String|null}      The resolved token or null if not found
+ */
 function resolveCookies(opts) {
   if (opts.cookie && this.cookies.get(opts.cookie)) {
     return this.cookies.get(opts.cookie);
