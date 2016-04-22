@@ -31,7 +31,7 @@ to the name of the cookie that contains the token. Custom token retrieval
 can also be done through the `opts.getToken` option. The provided function
 should match the following interface:
 
-```
+```js
 /**
  * Your custom token resolver
  * @this The ctx object passed to the middleware
