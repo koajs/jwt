@@ -249,6 +249,31 @@ describe('success tests', function () {
       .end(done);
   });
 
+  it('should use the first resolved token', function(done) {
+    var validUserResponse = function(res) {
+      if (!(res.body.foo === 'bar')) return "Wrong user";
+    }
+
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, secret);
+
+    var invalidToken = koajwt.sign({foo: 'bar'}, 'badSecret');
+
+    var app = koa();
+    app.use(koajwt({ secret: secret, cookie: 'jwt'}));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Cookie', 'jwt=' + token + ';')
+      .set('Authorization', 'Bearer ' + invalidToken)
+      .expect(200)
+      .expect(validUserResponse)
+      .end(done);
+  });
+
   it('should work if opts.cookies is set and the specified cookie contains valid jwt', function(done) {
     var validUserResponse = function(res) {
       if (!(res.body.foo === 'bar')) return "Wrong user";
@@ -420,5 +445,4 @@ describe('unless tests', function () {
       .end(done);
 
   });
-
 });
