@@ -76,7 +76,7 @@ function resolveAuthorizationHeader(opts) {
 
   var parts = this.header.authorization.split(' ');
 
-  if (parts.length == 2) {
+  if (parts.length === 2) {
     var scheme = parts[0];
     var credentials = parts[1];
 
