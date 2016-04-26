@@ -37,6 +37,7 @@
   ],
   "main": "./lib",
   "dependencies": {
+    "bluebird": "^3.3.5",
     "jsonwebtoken": "^5.7.0",
     "koa-unless": "0.0.1"
   },
