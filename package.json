@@ -37,12 +37,11 @@
   ],
   "main": "./lib",
   "dependencies": {
-    "jsonwebtoken": "5.x.x",
-    "koa-unless": "0.0.1",
-    "thunkify": "~2.1.x"
+    "jsonwebtoken": "^5.7.0",
+    "koa-unless": "0.0.1"
   },
   "devDependencies": {
-    "koa": "koajs/koa",
+    "koa": "^2.0.0",
     "mocha": "~2.2.1",
     "supertest": "~0.15.0"
   },

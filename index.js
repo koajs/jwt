@@ -1,11 +1,8 @@
-var assert   = require('assert');
-var thunkify = require('thunkify');
-var _JWT     = require('jsonwebtoken');
-var unless   = require('koa-unless');
-var util     = require('util');
-
-// Make verify function play nice with co/koa
-var JWT = {decode: _JWT.decode, sign: _JWT.sign, verify: thunkify(_JWT.verify)};
+'use strict';
+var assert    = require('assert');
+var JWT       = require('jsonwebtoken');
+var unless    = require('koa-unless');
+var util      = require('util');
 
 module.exports = function(opts) {
   opts = opts || {};
@@ -17,11 +14,11 @@ module.exports = function(opts) {
     tokenResolvers.unshift(opts.getToken);
   }
 
-  var middleware = function *jwt(next) {
+  var middleware = function jwt(ctx, next) {
     var token, msg, user, parts, scheme, credentials, secret;
 
     for (var i = 0; i < tokenResolvers.length; i++) {
-      var output = tokenResolvers[i].call(this, opts);
+      var output = tokenResolvers[i].call(ctx, opts);
 
       if (output) {
         token = output;
@@ -30,26 +27,26 @@ module.exports = function(opts) {
     }
 
     if (!token && !opts.passthrough) {
-      this.throw(401, 'No authentication token found\n');
+      ctx.throw(401, 'No authentication token found\n');
     }
 
-    secret = (this.state && this.state.secret) ? this.state.secret : opts.secret;
+    secret = (ctx.state && ctx.state.secret) ? ctx.state.secret : opts.secret;
     if (!secret) {
-      this.throw(500, 'Invalid secret\n');
+      ctx.throw(500, 'Invalid secret\n');
     }
 
     try {
-      user = yield JWT.verify(token, secret, opts);
+      user = JWT.verify(token, secret, opts);
     } catch(e) {
       msg = 'Invalid token' + (opts.debug ? ' - ' + e.message + '\n' : '\n');
     }
 
     if (user || opts.passthrough) {
-      this.state = this.state || {};
-      this.state[opts.key] = user;
-      yield next;
+      ctx.state = ctx.state || {};
+      ctx.state[opts.key] = user;
+      return next();
     } else {
-      this.throw(401, msg);
+      ctx.throw(401, msg);
     }
   };
 
@@ -106,8 +103,3 @@ function resolveCookies(opts) {
     return this.cookies.get(opts.cookie);
   }
 }
-
-// Export JWT methods as a convenience
-module.exports.sign   = _JWT.sign;
-module.exports.verify = _JWT.verify;
-module.exports.decode = _JWT.decode;
