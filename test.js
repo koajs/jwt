@@ -1,3 +1,4 @@
+'use strict';
 var TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIiLCJpYXQiOjE0MjY1NDY5MTl9.ETgkTn8BaxIX4YqvUWVFPmum3moNZ7oARZtSBXb_vP4';
 
 var Koa     = require('koa');
@@ -34,8 +35,8 @@ describe('failure tests', function () {
   it('should allow provided getToken function to throw', function(done) {
     var app = new Koa();
 
-    app.use(koajwt({ secret: 'shhhh', getToken: function() {
-      this.throw(401, 'Bad Authorization\n');
+    app.use(koajwt({ secret: 'shhhh', getToken: function(ctx) {
+      ctx.throw(401, 'Bad Authorization\n');
     } }));
     request(app.listen())
       .get('/')
@@ -236,8 +237,8 @@ describe('success tests', function () {
     var token = jwt.sign({foo: 'bar'}, secret);
 
     var app = new Koa();
-    app.use(koajwt({ secret: secret, getToken: function() {
-      return this.request.query.token;
+    app.use(koajwt({ secret: secret, getToken: function(ctx) {
+      return ctx.request.query.token;
     }}));
     app.use(function(ctx) {
       ctx.body = ctx.state.user;
