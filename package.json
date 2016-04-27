@@ -39,7 +39,7 @@
   "dependencies": {
     "bluebird": "^3.3.5",
     "jsonwebtoken": "^5.7.0",
-    "koa-unless": "0.0.1"
+    "koa-unless": "nfantone/koa-unless#next"
   },
   "devDependencies": {
     "koa": "^2.0.0",
@@ -47,7 +47,7 @@
     "supertest": "~0.15.0"
   },
   "engines": {
-    "node": ">= 0.12.0"
+    "node": ">= 4.0.0"
   },
   "scripts": {
     "test": "make test"
