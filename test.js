@@ -1,12 +1,12 @@
 'use strict';
-var TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIiLCJpYXQiOjE0MjY1NDY5MTl9.ETgkTn8BaxIX4YqvUWVFPmum3moNZ7oARZtSBXb_vP4';
+const TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIiLCJpYXQiOjE0MjY1NDY5MTl9.ETgkTn8BaxIX4YqvUWVFPmum3moNZ7oARZtSBXb_vP4';
 
-var Koa     = require('koa');
-var request = require('supertest');
-var assert  = require('assert');
-var jwt = require('jsonwebtoken')
+const Koa     = require('koa');
+const request = require('supertest');
+const assert  = require('assert');
+const jwt     = require('jsonwebtoken');
 
-var koajwt  = require('./index');
+const koajwt  = require('./index');
 
 describe('failure tests', function () {
 

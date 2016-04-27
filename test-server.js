@@ -1,13 +1,13 @@
 'use strict';
-var Koa = require('koa');
-var koajwt = require('./index');
-var jwt = require('jsonwebtoken');
+const Koa = require('koa');
+const koajwt = require('./index');
+const jwt = require('jsonwebtoken');
 
-var profile = {
+const profile = {
   id: 123
 };
 
-var token = jwt.sign(profile, 'secret', { expiresInMinutes: 60*5 });
+const TOKEN = jwt.sign(profile, 'secret', { expiresInMinutes: 60*5 });
 
 console.log('Starting koa-jwt test server on http://localhost:3000/');
 console.log('');
@@ -15,7 +15,7 @@ console.log('You can test the server by issuing curl commands like the following
 console.log('')
 console.log('  curl http://localhost:3000/public/foo            # should succeed (return "unprotected")');
 console.log('  curl http://localhost:3000/api/foo               # should fail (return "401 Unauthorized ...")');
-console.log('  curl -H "Authorization: Bearer ' + token + '" http://localhost:3000/api/foo   # should succeed (return "protected")');
+console.log('  curl -H "Authorization: Bearer ' + TOKEN + '" http://localhost:3000/api/foo   # should succeed (return "protected")');
 console.log('')
 
 var app = new Koa();

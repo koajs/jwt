@@ -1,9 +1,9 @@
 'use strict';
-var assert    = require('assert');
-var Promise   = require('bluebird');
-var JWT       = Promise.promisifyAll(require('jsonwebtoken'));
-var unless    = require('koa-unless');
-var util      = require('util');
+const assert    = require('assert');
+const Promise   = require('bluebird');
+const JWT       = Promise.promisifyAll(require('jsonwebtoken'));
+const unless    = require('koa-unless');
+const util      = require('util');
 
 module.exports = function(opts) {
   opts = opts || {};
