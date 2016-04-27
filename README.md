@@ -57,31 +57,29 @@ of the one in `opts.secret`.
 ## Example
 
 ```js
-var koa = require('koa');
+var Koa = require('koa');
 var jwt = require('koa-jwt');
 
-var app = koa();
+var app = new Koa();
 
 // Custom 401 handling if you don't want to expose koa-jwt errors to users
-app.use(function *(next){
-  try {
-    yield next;
-  } catch (err) {
+app.use(function(ctx, next){
+  return next().catch((err) => {
     if (401 == err.status) {
-      this.status = 401;
-      this.body = 'Protected resource, use Authorization header to get access\n';
+      ctx.status = 401;
+      ctx.body = 'Protected resource, use Authorization header to get access\n';
     } else {
       throw err;
     }
-  }
+  });
 });
 
 // Unprotected middleware
-app.use(function *(next){
-  if (this.url.match(/^\/public/)) {
-    this.body = 'unprotected\n';
+app.use(function(ctx, next){
+  if (ctx.url.match(/^\/public/)) {
+    ctx.body = 'unprotected\n';
   } else {
-    yield next;
+    return next();
   }
 });
 
@@ -89,9 +87,9 @@ app.use(function *(next){
 app.use(jwt({ secret: 'shared-secret' }));
 
 // Protected middleware
-app.use(function *(){
-  if (this.url.match(/^\/api/)) {
-    this.body = 'protected\n';
+app.use(function(ctx){
+  if (ctx.url.match(/^\/api/)) {
+    ctx.body = 'protected\n';
   }
 });
 
@@ -105,25 +103,25 @@ Alternatively you can conditionally run the `jwt` middleware under certain condi
 var koa = require('koa');
 var jwt = require('koa-jwt');
 
-var app = koa();
+var app = new Koa();
 
 // Middleware below this line is only reached if JWT token is valid
 // unless the URL starts with '/public'
 app.use(jwt({ secret: 'shared-secret' }).unless({ path: [/^\/public/] }));
 
 // Unprotected middleware
-app.use(function *(next){
-  if (this.url.match(/^\/public/)) {
-    this.body = 'unprotected\n';
+app.use(function(ctx, next){
+  if (ctx.url.match(/^\/public/)) {
+    ctx.body = 'unprotected\n';
   } else {
-    yield next;
+    return next();
   }
 });
 
 // Protected middleware
-app.use(function *(){
-  if (this.url.match(/^\/api/)) {
-    this.body = 'protected\n';
+app.use(function(ctx){
+  if (ctx.url.match(/^\/api/)) {
+    ctx.body = 'protected\n';
   }
 });
 
