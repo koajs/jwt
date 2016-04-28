@@ -39,7 +39,7 @@
   "dependencies": {
     "bluebird": "^3.3.5",
     "jsonwebtoken": "^5.7.0",
-    "koa-unless": "nfantone/koa-unless#next"
+    "koa-unless": "^1.0.0"
   },
   "devDependencies": {
     "koa": "^2.0.0",
