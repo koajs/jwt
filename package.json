@@ -37,17 +37,17 @@
   ],
   "main": "./lib",
   "dependencies": {
-    "jsonwebtoken": "5.x.x",
-    "koa-unless": "0.0.1",
-    "thunkify": "~2.1.x"
+    "bluebird": "^3.3.5",
+    "jsonwebtoken": "^5.7.0",
+    "koa-unless": "^1.0.0"
   },
   "devDependencies": {
-    "koa": "koajs/koa",
+    "koa": "^2.0.0",
     "mocha": "~2.2.1",
     "supertest": "~0.15.0"
   },
   "engines": {
-    "node": ">= 0.12.0"
+    "node": ">= 4.0.0"
   },
   "scripts": {
     "test": "make test"
