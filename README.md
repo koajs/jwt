@@ -57,15 +57,16 @@ of the one in `opts.secret`.
 ## Example
 
 ```js
-var koa = require('koa');
+var Koa = require('koa');
 var jwt = require('koa-jwt');
+var co = require('co');
 
-var app = koa();
+var app = new Koa();
 
 // Custom 401 handling if you don't want to expose koa-jwt errors to users
-app.use(function *(next){
+app.use(co.wrap(function *(ctx, next){
   try {
-    yield next;
+    yield next();
   } catch (err) {
     if (401 == err.status) {
       this.status = 401;
@@ -74,14 +75,14 @@ app.use(function *(next){
       throw err;
     }
   }
-});
+}));
 
 // Unprotected middleware
-app.use(function *(next){
-  if (this.url.match(/^\/public/)) {
-    this.body = 'unprotected\n';
+app.use((ctx, next)=>{
+  if (ctx.url.match(/^\/public/)) {
+    ctx.body = 'unprotected\n';
   } else {
-    yield next;
+    return next();
   }
 });
 
@@ -89,9 +90,9 @@ app.use(function *(next){
 app.use(jwt({ secret: 'shared-secret' }));
 
 // Protected middleware
-app.use(function *(){
-  if (this.url.match(/^\/api/)) {
-    this.body = 'protected\n';
+app.use(ctx=> {
+  if (ctx.url.match(/^\/api/)) {
+    ctx.body = 'protected\n';
   }
 });
 
@@ -112,18 +113,18 @@ var app = koa();
 app.use(jwt({ secret: 'shared-secret' }).unless({ path: [/^\/public/] }));
 
 // Unprotected middleware
-app.use(function *(next){
+app.use( (ctx, next)=> {
   if (this.url.match(/^\/public/)) {
-    this.body = 'unprotected\n';
+    ctx.body = 'unprotected\n';
   } else {
     yield next;
   }
 });
 
 // Protected middleware
-app.use(function *(){
+app.use(ctx=> {
   if (this.url.match(/^\/api/)) {
-    this.body = 'protected\n';
+    ctx.body = 'protected\n';
   }
 });
 
@@ -196,6 +197,7 @@ This code is largely based on [express-jwt](https://github.com/auth0/express-jwt
 - [sc0ttyd](https://github.com/sc0ttyd)
 - [Jackong](https://github.com/Jackong)
 - [danwkennedy](https://github.com/danwkennedy)
+- [Yu Qi](https://github.com/iyuq)
 
 ## License
 
