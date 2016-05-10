@@ -12,7 +12,7 @@ for a good introduction.
 ## Install
 
 ```
-$ npm install koa-jwt
+$ npm install koa-jwt@koa2
 ```
 
 ## Usage
