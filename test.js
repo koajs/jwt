@@ -162,8 +162,8 @@ describe('failure tests', function () {
     request(app.listen())
       .get('/')
       .set('Authorization', 'Bearer ' + token)
-      .expect(500)
-      .expect('Internal Server Error')
+      .expect(401)
+      .expect('Invalid secret\n')
       .end(done);
   });
 

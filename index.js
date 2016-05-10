@@ -33,7 +33,7 @@ module.exports = function(opts) {
 
     secret = (ctx.state && ctx.state.secret) ? ctx.state.secret : opts.secret;
     if (!secret) {
-      ctx.throw(500, 'Invalid secret\n');
+      ctx.throw(401, 'Invalid secret\n');
     }
 
     return JWT.verifyAsync(token, secret, opts)
