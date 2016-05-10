@@ -1,60 +1,69 @@
-var assert   = require('assert');
-var thunkify = require('thunkify');
-var _JWT     = require('jsonwebtoken');
-var unless   = require('koa-unless');
-var util     = require('util');
+'use strict';
 
-// Make verify function play nice with co/koa
-var JWT = {decode: _JWT.decode, sign: _JWT.sign, verify: thunkify(_JWT.verify)};
+const assert = require('assert');
+const _JWT = require('jsonwebtoken');
+const unless = require('koa-unless');
+const util = require('util');
 
-module.exports = function(opts) {
+module.exports = function (opts) {
   opts = opts || {};
   opts.key = opts.key || 'user';
-
-  var tokenResolvers = [resolveCookies, resolveAuthorizationHeader];
-
+  
+  let tokenResolvers = [resolveCookies, resolveAuthorizationHeader];
+  
   if (opts.getToken && util.isFunction(opts.getToken)) {
     tokenResolvers.unshift(opts.getToken);
   }
-
-  var middleware = function *jwt(next) {
-    var token, msg, user, parts, scheme, credentials, secret;
-
-    for (var i = 0; i < tokenResolvers.length; i++) {
-      var output = tokenResolvers[i].call(this, opts);
-
+  
+  const middleware = function (ctx, next) {
+    let token, msg, user, parts, scheme, credentials, secret;
+    
+    for (let i = 0; i < tokenResolvers.length; i++) {
+      var output = tokenResolvers[i].call(ctx, opts);
+      
       if (output) {
         token = output;
         break;
       }
     }
-
+    
     if (!token && !opts.passthrough) {
-      this.throw(401, 'No authentication token found\n');
+      ctx.status = 401;
+      ctx.message = 'No authentication token found\n';
+      return;
     }
-
-    secret = (this.state && this.state.secret) ? this.state.secret : opts.secret;
+    
+    secret = (ctx.state && ctx.state.secret) ? ctx.state.secret : opts.secret;
     if (!secret) {
-      this.throw(500, 'Invalid secret\n');
+      ctx.status = 500;
+      ctx.message = 'Invalid secret\n';
+      return;
     }
-
-    try {
-      user = yield JWT.verify(token, secret, opts);
-    } catch(e) {
-      msg = 'Invalid token' + (opts.debug ? ' - ' + e.message + '\n' : '\n');
-    }
-
-    if (user || opts.passthrough) {
-      this.state = this.state || {};
-      this.state[opts.key] = user;
-      yield next;
-    } else {
-      this.throw(401, msg);
-    }
+    
+    return new Promise((resolve, reject)=> {
+      _JWT.verify(token, secret, opts, (err, user)=> {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(user);
+        }
+      })
+    }).then(user=> {
+      ctx.state = ctx.state || {};
+      ctx.state[opts.key] = user;
+      next();
+    }).catch(err=> {
+      if (opts.passthrough) {
+        return next();
+      }
+      ctx.status = 401;
+      msg = 'Invalid token' + (opts.debug ? ' - ' + err.message + '\n' : '\n');
+      ctx.message = msg;
+    });
   };
-
+  
   middleware.unless = unless;
-
+  
   return middleware;
 };
 
@@ -73,13 +82,13 @@ function resolveAuthorizationHeader(opts) {
   if (!this.header || !this.header.authorization) {
     return;
   }
-
-  var parts = this.header.authorization.split(' ');
-
+  
+  let parts = this.header.authorization.split(' ');
+  
   if (parts.length === 2) {
-    var scheme = parts[0];
-    var credentials = parts[1];
-
+    let scheme = parts[0];
+    let credentials = parts[1];
+    
     if (/^Bearer$/i.test(scheme)) {
       return credentials;
     }
@@ -108,6 +117,6 @@ function resolveCookies(opts) {
 }
 
 // Export JWT methods as a convenience
-module.exports.sign   = _JWT.sign;
+module.exports.sign = _JWT.sign;
 module.exports.verify = _JWT.verify;
 module.exports.decode = _JWT.decode;
