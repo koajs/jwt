@@ -152,7 +152,7 @@ describe('failure tests', function () {
       .end(done);
   });
 
-  it('should throw if secret neither provide by options and middleware', function (done) {
+  it('should throw if secret neither provided by options or middleware', function (done) {
     var secret = 'shhhhhh';
     var token = jwt.sign({foo: 'bar', iss: 'http://foo' }, secret);
 
@@ -167,7 +167,7 @@ describe('failure tests', function () {
       .end(done);
   });
 
-  it('should throw if secret both provide by options(right secret) and middleware(wrong secret)', function (done) {
+  it('should throw if secret both provided by options (right secret) and middleware (wrong secret)', function (done) {
     var secret = 'shhhhhh';
     var token = jwt.sign({foo: 'bar', iss: 'http://foo' }, secret);
 
@@ -175,11 +175,11 @@ describe('failure tests', function () {
 
     app.use(koajwt({secret: 'wrong secret', debug: true}));
     request(app.listen())
-        .get('/')
-        .set('Authorization', 'Bearer ' + token)
-        .expect(401)
-        .expect('Invalid token - invalid signature\n')
-        .end(done);
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(401)
+      .expect('Invalid token - invalid signature\n')
+      .end(done);
   });
 
 });
