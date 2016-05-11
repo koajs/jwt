@@ -5,21 +5,21 @@ const JWT       = Promise.promisifyAll(require('jsonwebtoken'));
 const unless    = require('koa-unless');
 const util      = require('util');
 
-module.exports = function(opts) {
+module.exports = (opts) => {
   opts = opts || {};
   opts.key = opts.key || 'user';
 
-  var tokenResolvers = [resolveCookies, resolveAuthorizationHeader];
+  const tokenResolvers = [resolveCookies, resolveAuthorizationHeader];
 
   if (opts.getToken && util.isFunction(opts.getToken)) {
     tokenResolvers.unshift(opts.getToken);
   }
 
-  var middleware = function jwt(ctx, next) {
-    var token, parts, scheme, credentials, secret;
+  const middleware = (ctx, next) => {
+    let token, parts, scheme, credentials, secret;
 
-    for (var i = 0; i < tokenResolvers.length; i++) {
-      var output = tokenResolvers[i](ctx, opts);
+    for (let i = 0; i < tokenResolvers.length; i++) {
+      let output = tokenResolvers[i](ctx, opts);
 
       if (output) {
         token = output;
@@ -70,11 +70,11 @@ function resolveAuthorizationHeader(ctx, opts) {
     return;
   }
 
-  var parts = ctx.header.authorization.split(' ');
+  let parts = ctx.header.authorization.split(' ');
 
   if (parts.length === 2) {
-    var scheme = parts[0];
-    var credentials = parts[1];
+    let scheme = parts[0];
+    let credentials = parts[1];
 
     if (/^Bearer$/i.test(scheme)) {
       return credentials;
