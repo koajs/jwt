@@ -21,12 +21,12 @@ module.exports = function(opts) {
     tokenResolvers.find((resolver) => token = resolver(ctx, opts));
 
     if (!token && !opts.passthrough) {
-      ctx.throw(401, 'No authentication token found\n');
+      return ctx.throw(401, 'No authentication token found\n');
     }
 
     secret = (ctx.state && ctx.state.secret) ? ctx.state.secret : opts.secret;
     if (!secret) {
-      ctx.throw(401, 'Invalid secret\n');
+      return ctx.throw(401, 'Invalid secret\n');
     }
 
     return JWT.verifyAsync(token, secret, opts)
