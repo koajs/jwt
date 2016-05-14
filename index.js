@@ -1,9 +1,9 @@
 'use strict';
-const assert    = require('assert');
-const Promise   = require('bluebird');
-const JWT       = Promise.promisifyAll(require('jsonwebtoken'));
-const unless    = require('koa-unless');
-const util      = require('util');
+const assert      = require('assert');
+const Promise     = require('bluebird');
+const JWT         = Promise.promisifyAll(require('jsonwebtoken'));
+const unless      = require('koa-unless');
+const isFunction  = require('lodash.isfunction');
 
 module.exports = function(opts) {
   opts = opts || {};
@@ -11,7 +11,7 @@ module.exports = function(opts) {
 
   var tokenResolvers = [resolveCookies, resolveAuthorizationHeader];
 
-  if (opts.getToken && util.isFunction(opts.getToken)) {
+  if (opts.getToken && isFunction(opts.getToken)) {
     tokenResolvers.unshift(opts.getToken);
   }
 
