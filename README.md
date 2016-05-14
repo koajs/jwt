@@ -137,6 +137,8 @@ app.use(jwt({ secret: 'shared-secret', passthrough: true }));
 ```
 This lets downstream middleware make decisions based on whether `ctx.state.user` is set.
 
+As an alternative, if you set `passthrough` to be an `Object` instead of a `boolean`, its value will be set as `ctx.state.user`. This is mostly useful during development while writing middlewares that relies on `ctx.state.user` to be present.
+
 
 If you prefer to use another ctx key for the decoded data, just pass in `key`, like so:
 ```js
