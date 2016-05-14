@@ -199,6 +199,21 @@ describe('passthrough tests', function () {
       .expect('')
       .end(done);
   });
+
+  it('should set user if `passthrough` is an object', function(done) {
+    var app = new Koa();
+
+    app.use(koajwt({ secret: 'shhhhhh', passthrough: { foo: 'bar' }, debug: true }));
+    app.use(function (ctx) {
+      ctx.body = ctx.state.user;
+    });
+
+    request(app.listen())
+      .get('/')
+      .expect(200)
+      .expect({ foo: 'bar' })
+      .end(done);
+  });
 });
 
 

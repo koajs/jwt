@@ -4,6 +4,7 @@ const Promise     = require('bluebird');
 const JWT         = Promise.promisifyAll(require('jsonwebtoken'));
 const unless      = require('koa-unless');
 const isFunction  = require('lodash.isfunction');
+const isObject    = require('lodash.isobject');
 
 module.exports = function(opts) {
   opts = opts || {};
@@ -30,14 +31,16 @@ module.exports = function(opts) {
     }
 
     return JWT.verifyAsync(token, secret, opts)
-      .then((user) => {
-        ctx.state = ctx.state || {};
-        ctx.state[opts.key] = user;
-      })
+      .then((user) => setUser(ctx, opts, user))
       .catch((e) => {
         if (!opts.passthrough) {
           let msg = 'Invalid token' + (opts.debug ? ' - ' + e.message + '\n' : '\n');
           return ctx.throw(401, msg);
+        }
+      })
+      .then(() => {
+        if (isObject(opts.passthrough)) {
+          return setUser(ctx, opts, opts.passthrough);
         }
       })
       .then(() => next())
@@ -48,6 +51,18 @@ module.exports = function(opts) {
   return middleware;
 };
 
+/**
+ * Sets the authenticated user data onto `ctx.state[opts.key]`.
+ *
+ * @param {Object}    ctx  The ctx object passed to the middleware
+ * @param {Object}    opts The middleware's options
+ * @param {Object}    user User data to be set
+ */
+function setUser(ctx, opts, user) {
+  ctx.state = ctx.state || {};
+  ctx.state[opts.key] = user;
+  return ctx;
+}
 
 /**
  * resolveAuthorizationHeader - Attempts to parse the token from the Authorization header

@@ -39,7 +39,9 @@
   "dependencies": {
     "bluebird": "^3.3.5",
     "jsonwebtoken": "^6.2.0",
-    "koa-unless": "^1.0.0"
+    "koa-unless": "^1.0.0",
+    "lodash.isfunction": "^3.0.8",
+    "lodash.isobject": "^3.0.2"
   },
   "devDependencies": {
     "koa": "^2.0.0",
