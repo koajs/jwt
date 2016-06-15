@@ -84,10 +84,10 @@ function resolveAuthorizationHeader(opts) {
     if (/^Bearer$/i.test(scheme)) {
       return credentials;
     }
-  } else {
-    if (!opts.passthrough) {
-      this.throw(401, 'Bad Authorization header format. Format is "Authorization: Bearer <token>"\n');
-    }
+  }
+
+  if (!opts.passthrough) {
+    this.throw(401, 'Bad Authorization header format. Format is "Authorization: Bearer <token>"\n');
   }
 }
 
