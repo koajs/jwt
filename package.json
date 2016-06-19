@@ -1,6 +1,6 @@
 {
   "name": "koa-jwt",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Koa JWT authentication middleware.",
   "keywords": [
     "auth",
@@ -29,22 +29,17 @@
     "email": "stian@grytoyr.net",
     "url": "http://stian.grytoyr.net/"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://www.opensource.org/licenses/MIT"
-    }
-  ],
+  "license": "MIT",
   "main": "./lib",
   "dependencies": {
     "bluebird": "^3.3.5",
-    "jsonwebtoken": "^5.7.0",
+    "jsonwebtoken": "^7.0.1",
     "koa-unless": "^1.0.0"
   },
   "devDependencies": {
     "koa": "^2.0.0",
     "mocha": "~2.2.1",
-    "supertest": "~0.15.0"
+    "supertest": "~1.2.0"
   },
   "engines": {
     "node": ">= 4.0.0"
