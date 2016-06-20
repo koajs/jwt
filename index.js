@@ -9,17 +9,17 @@ module.exports = function(opts) {
   opts = opts || {};
   opts.key = opts.key || 'user';
 
-  var tokenResolvers = [resolveCookies, resolveAuthorizationHeader];
+  const tokenResolvers = [resolveCookies, resolveAuthorizationHeader];
 
   if (opts.getToken && util.isFunction(opts.getToken)) {
     tokenResolvers.unshift(opts.getToken);
   }
 
-  var middleware = function jwt(ctx, next) {
-    var token, parts, scheme, credentials, secret;
+  const middleware = (ctx, next) => {
+    let token, secret;
 
-    for (var i = 0; i < tokenResolvers.length; i++) {
-      var output = tokenResolvers[i](ctx, opts);
+    for (let resolver of tokenResolvers) {
+      const output = resolver(ctx, opts);
 
       if (output) {
         token = output;
@@ -70,11 +70,11 @@ function resolveAuthorizationHeader(ctx, opts) {
     return;
   }
 
-  var parts = ctx.header.authorization.split(' ');
+  const parts = ctx.header.authorization.split(' ');
 
   if (parts.length === 2) {
-    var scheme = parts[0];
-    var credentials = parts[1];
+    const scheme = parts[0];
+    const credentials = parts[1];
 
     if (/^Bearer$/i.test(scheme)) {
       return credentials;

@@ -4,10 +4,12 @@ const koajwt = require('./index');
 const jwt = require('jsonwebtoken');
 
 const profile = {
-  id: 123
+  id: 123,
+  name: 'Jim',
+  role: 'root',
 };
 
-const TOKEN = jwt.sign(profile, 'secret', { expiresInMinutes: 60*5 });
+const TOKEN = jwt.sign(profile, 'secret', { expiresIn: '5h' });
 
 console.log('Starting koa-jwt test server on http://localhost:3000/');
 console.log('');
@@ -18,14 +20,13 @@ console.log('  curl http://localhost:3000/api/foo               # should fail (r
 console.log('  curl -H "Authorization: Bearer ' + TOKEN + '" http://localhost:3000/api/foo   # should succeed (return "protected")');
 console.log('')
 
-var app = new Koa();
+const app = new Koa();
 
 // Custom 401 handling
-app.use(function(ctx, next){
+app.use((ctx, next) => {
   return next().catch((err) => {
     if (401 == err.status) {
-      ctx.status = 401;
-      ctx.body = '401 Unauthorized - Protected resource, use Authorization header to get access\n';
+      ctx.throw(401, '401 Unauthorized - Protected resource, use Authorization header to get access\n');
     } else {
       throw err;
     }
@@ -33,7 +34,7 @@ app.use(function(ctx, next){
 });
 
 // Unprotected middleware
-app.use(function(ctx, next){
+app.use((ctx, next) => {
   if (ctx.url.match(/^\/public/)) {
     ctx.body = 'unprotected\n';
   } else {
@@ -44,7 +45,7 @@ app.use(function(ctx, next){
 // Middleware below this line is only reached if JWT token is valid
 app.use(koajwt({ secret: 'secret' }));
 
-app.use(function(ctx){
+app.use((ctx) => {
   if (ctx.url.match(/^\/api/)) {
     ctx.body = 'protected\n';
   }
