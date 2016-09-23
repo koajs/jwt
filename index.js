@@ -18,6 +18,9 @@ module.exports = function(opts) {
   }
 
   var middleware = function *jwt(next) {
+
+    console.log('test middleware');
+
     var token, msg, user, parts, scheme, credentials, secret;
 
     for (var i = 0; i < tokenResolvers.length; i++) {
