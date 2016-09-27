@@ -14,6 +14,7 @@ for a good introduction.
 Bnbsitter changed the status of exceptions returned by jwt to catch them more accurately.
 
 New status code:
+
 | Status code | koa-jwt exception                                                         | Bnbsitter exception                                |
 |-------------|---------------------------------------------------------------------------|----------------------------------------------------|
 | 401         | No authentication token found                                             | error.BadAuthorization.TokenNotFound               |
