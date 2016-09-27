@@ -8,7 +8,7 @@ var koajwt  = require('./index');
 
 describe('failure tests', function () {
 
-  it('should throw 401 if no authorization header', function(done) {
+  it('should throw 460 if no authorization header', function(done) {
     var app = koa();
 
     app.use(koajwt({ secret: 'shhhh' }));
@@ -26,7 +26,7 @@ describe('failure tests', function () {
       .get('/')
       .set('Authorization', 'wrong')
       .expect(401)
-      .expect('Bad Authorization header format. Format is "Authorization: Bearer <token>"\n')
+      .expect('error.BadAuthorization.InvalidHeaderFormat')
       .end(done);
   });
 
@@ -53,7 +53,7 @@ describe('failure tests', function () {
     request(app.listen())
       .get('/')
       .expect(401)
-      .expect('Invalid token\n')
+      .expect('error.BadAuthorization.InvalidToken')
       .end(done);
   });
 
@@ -65,7 +65,7 @@ describe('failure tests', function () {
       .get('/')
       .set('Authorization', 'Bearer wrongjwt')
       .expect(401)
-      .expect('Invalid token\n')
+      .expect('error.BadAuthorization.InvalidToken')
       .end(done);
   });
 
@@ -80,7 +80,7 @@ describe('failure tests', function () {
       .get('/')
       .set('Authorization', 'Bearer ' + token)
       .expect(401)
-      .expect('Invalid token - invalid signature\n')
+      .expect('error.BadAuthorization.InvalidToken.InvalidSignature')
       .end(done);
       //   assert.equal(err.message, 'invalid signature');
   });
@@ -100,7 +100,7 @@ describe('failure tests', function () {
       .get('/')
       .set('Cookie', 'jwt=bad' + token + ';')
       .expect(401)
-      .expect('Invalid token\n')
+      .expect('error.BadAuthorization.InvalidToken')
       .end(done);
 
   });
@@ -116,7 +116,7 @@ describe('failure tests', function () {
       .get('/')
       .set('Authorization', 'Bearer ' + token)
       .expect(401)
-      .expect('Invalid token - jwt audience invalid. expected: not-expected-audience\n')
+      .expect('error.BadAuthorization.InvalidToken.JwtAudienceInvalid.Expected:Not-expected-audience')
       .end(done);
   });
 
@@ -131,7 +131,7 @@ describe('failure tests', function () {
       .get('/')
       .set('Authorization', 'Bearer ' + token)
       .expect(401)
-      .expect('Invalid token - jwt expired\n')
+      .expect('error.BadAuthorization.InvalidToken.JwtExpired')
       .end(done);
   });
 
@@ -146,7 +146,7 @@ describe('failure tests', function () {
       .get('/')
       .set('Authorization', 'Bearer ' + token)
       .expect(401)
-      .expect('Invalid token - jwt issuer invalid. expected: http://wrong\n')
+      .expect('error.BadAuthorization.InvalidToken.JwtIssuerInvalid.Expected:Http://wrong')
       .end(done);
   });
 
@@ -160,8 +160,8 @@ describe('failure tests', function () {
     request(app.listen())
       .get('/')
       .set('Authorization', 'Bearer ' + token)
-      .expect(500)
-      .expect('Internal Server Error')
+      .expect(401)
+      .expect('error.BadAuthorization.InvalidSecret')
       .end(done);
   });
 
@@ -176,7 +176,7 @@ describe('failure tests', function () {
         .get('/')
         .set('Authorization', 'Bearer ' + token)
         .expect(401)
-        .expect('Invalid token - invalid signature\n')
+        .expect('error.BadAuthorization.InvalidToken.InvalidSignature')
         .end(done);
   });
 
@@ -418,7 +418,7 @@ describe('unless tests', function () {
       .get('/private')
       .set('Authorization', 'wrong')
       .expect(401)
-      .expect('Bad Authorization header format. Format is "Authorization: Bearer <token>"\n')
+      .expect('error.BadAuthorization.InvalidHeaderFormat')
       .end(done);
   });
 

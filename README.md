@@ -9,6 +9,22 @@ in your [Koa](http://koajs.com/) (node.js) applications.
 See [this article](http://blog.auth0.com/2014/01/07/angularjs-authentication-with-cookies-vs-token/)
 for a good introduction.
 
+## Bnbsitter exceptions status
+
+Bnbsitter changed the status of exceptions returned by jwt to catch them more accurately.
+
+New status code:
+| Status code | koa-jwt exception                                                         | Bnbsitter exception                                |
+|-------------|---------------------------------------------------------------------------|----------------------------------------------------|
+| 401         | No authentication token found                                             | error.BadAuthorization.TokenNotFound               |
+| 401         | Invalid secret                                                            | error.BadAuthorization.InvalidSecret               |
+| 401         | Invalid token                                                             | error.BadAuthorization.InvalidToken                |
+| 401         | Invalid token - jwt audience invalid. expected: not-expected-audience     | error.BadAuthorization.error.BadAuthorization.InvalidToken.JwtAudienceInvalid.Expected:Not-expected-audience               |
+| 401         | Invalid token - jwt expired                                               | error.BadAuthorization.error.BadAuthorization.InvalidToken.JwtExpired                |
+| 401         | Invalid token - jwt issuer invalid. expected: http://wrong                | error.BadAuthorization.error.BadAuthorization.InvalidToken.JwtIssuerInvalid.Expected:Http://wrong                |
+| 401         | Invalid token - invalid signature                                         | error.BadAuthorization.InvalidToken.InvalidSignature                |
+| 401         | Bad Authorization header format. Format is "Authorization: Bearer {token}"| error.BadAuthorization.InvalidHeaderFormat |
+
 ## Install
 
 ```

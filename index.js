@@ -18,9 +18,6 @@ module.exports = function(opts) {
   }
 
   var middleware = function *jwt(next) {
-
-    console.log('test middleware');
-
     var token, msg, user, parts, scheme, credentials, secret;
 
     for (var i = 0; i < tokenResolvers.length; i++) {
@@ -33,18 +30,18 @@ module.exports = function(opts) {
     }
 
     if (!token && !opts.passthrough) {
-      this.throw(401, 'No authentication token found\n');
+      this.throw(401, 'error.BadAuthorization.TokenNotFound');
     }
 
     secret = (this.state && this.state.secret) ? this.state.secret : opts.secret;
     if (!secret) {
-      this.throw(500, 'Invalid secret\n');
+      this.throw(401, 'error.BadAuthorization.InvalidSecret');
     }
 
     try {
       user = yield JWT.verify(token, secret, opts);
     } catch(e) {
-      msg = 'Invalid token' + (opts.debug ? ' - ' + e.message + '\n' : '\n');
+      msg = 'error.BadAuthorization.InvalidToken' + (opts.debug ? '.' + e.message.capitalize() : '');
     }
 
     if (user || opts.passthrough) {
@@ -88,7 +85,7 @@ function resolveAuthorizationHeader(opts) {
     }
   } else {
     if (!opts.passthrough) {
-      this.throw(401, 'Bad Authorization header format. Format is "Authorization: Bearer <token>"\n');
+      this.throw(401, 'error.BadAuthorization.InvalidHeaderFormat');
     }
   }
 }
@@ -109,6 +106,21 @@ function resolveCookies(opts) {
     return this.cookies.get(opts.cookie);
   }
 }
+
+/**
+ * capitalize - Capitalize each first letter of a string and remove spaces.
+ *
+ * @return {String}   The capitalized string
+ */
+String.prototype.capitalize = function() {
+    var splitStr = this.toLowerCase().split(' ');
+   for (var i = 0; i < splitStr.length; i++) {
+       splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
+   }
+   // Directly return the joined string
+   return splitStr.join(''); 
+}
+
 
 // Export JWT methods as a convenience
 module.exports.sign   = _JWT.sign;
