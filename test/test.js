@@ -6,7 +6,7 @@ const request = require('supertest');
 const assert  = require('assert');
 const jwt     = require('jsonwebtoken');
 
-const koajwt  = require('./index');
+const koajwt  = require('../lib');
 
 describe('failure tests', function () {
 

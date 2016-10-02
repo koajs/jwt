@@ -1,13 +1,13 @@
 'use strict';
 const Koa = require('koa');
-const koajwt = require('./index');
+const koajwt = require('../lib');
 const jwt = require('jsonwebtoken');
 
 const profile = {
   id: 123
 };
 
-const TOKEN = jwt.sign(profile, 'secret', { expiresInMinutes: 60*5 });
+const TOKEN = jwt.sign(profile, 'secret', { expiresIn: 60*5 });
 
 console.log('Starting koa-jwt test server on http://localhost:3000/');
 console.log('');
