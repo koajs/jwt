@@ -20,36 +20,41 @@ module.exports = function(opts) {
   var middleware = function *jwt(next) {
     var token, msg, user, parts, scheme, credentials, secret;
 
-    for (var i = 0; i < tokenResolvers.length; i++) {
-      var output = tokenResolvers[i].call(this, opts);
-
-      if (output) {
-        token = output;
-        break;
-      }
-    }
-
-    if (!token && !opts.passthrough) {
-      this.throw(401, 'No authentication token found\n');
-    }
-
-    secret = (this.state && this.state.secret) ? this.state.secret : opts.secret;
-    if (!secret) {
-      this.throw(500, 'Invalid secret\n');
-    }
-
-    try {
-      user = yield JWT.verify(token, secret, opts);
-    } catch(e) {
-      msg = 'Invalid token' + (opts.debug ? ' - ' + e.message + '\n' : '\n');
-    }
-
-    if (user || opts.passthrough) {
-      this.state = this.state || {};
-      this.state[opts.key] = user;
+    // directly yield to next to save time
+    if(opts.passthrough){
       yield next;
-    } else {
-      this.throw(401, msg);
+    }else{
+      for (var i = 0; i < tokenResolvers.length; i++) {
+        var output = tokenResolvers[i].call(this, opts);
+
+        if (output) {
+          token = output;
+          break;
+        }
+      }
+
+      if (!token) {
+        this.throw(401, 'No authentication token found\n');
+      }
+
+      secret = (this.state && this.state.secret) ? this.state.secret : opts.secret;
+      if (!secret) {
+        this.throw(500, 'Invalid secret\n');
+      }
+
+      try {
+        user = yield JWT.verify(token, secret, opts);
+      } catch(e) {
+        msg = 'Invalid token' + (opts.debug ? ' - ' + e.message + '\n' : '\n');
+      }
+
+      if (user) {
+        this.state = this.state || {};
+        this.state[opts.key] = user;
+        yield next;
+      } else {
+        this.throw(401, msg);
+      }
     }
   };
 
@@ -84,9 +89,7 @@ function resolveAuthorizationHeader(opts) {
       return credentials;
     }
   } else {
-    if (!opts.passthrough) {
-      this.throw(401, 'Bad Authorization header format. Format is "Authorization: Bearer <token>"\n');
-    }
+    this.throw(401, 'Bad Authorization header format. Format is "Authorization: Bearer <token>"\n');
   }
 }
 
