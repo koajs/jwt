@@ -29,27 +29,24 @@
     "email": "stian@grytoyr.net",
     "url": "http://stian.grytoyr.net/"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://www.opensource.org/licenses/MIT"
-    }
-  ],
+  "license": "MIT",
   "main": "./lib",
   "dependencies": {
-    "bluebird": "^3.3.5",
-    "jsonwebtoken": "^5.7.0",
+    "bluebird": "^3.4.6",
+    "jsonwebtoken": "^7.1.9",
     "koa-unless": "^1.0.0"
   },
   "devDependencies": {
     "koa": "^2.0.0",
-    "mocha": "~2.2.1",
-    "supertest": "~0.15.0"
+    "mocha": "~3.1.0",
+    "supertest": "~2.0.0",
+    "istanbul": "~0.4.5"
   },
   "engines": {
     "node": ">= 4.0.0"
   },
   "scripts": {
-    "test": "make test"
+    "test": "istanbul cover node_modules/mocha/bin/_mocha -- --reporter spec --bail test/test.js",
+    "test-only": "mocha --reporter spec --bail test/test.js"
   }
 }

@@ -1,4 +1,25 @@
-# koa-jwt
+koa-jwt
+=======
+
+[![NPM version][npm-image]][npm-url]
+[![build status][travis-image]][travis-url]
+[![Coveralls][coveralls-image]][coveralls-url]
+[![node version][node-image]][node-url]
+[![npm download][download-image]][download-url]
+[![license][license-image]][license-url]
+
+[npm-image]: https://img.shields.io/npm/v/koa-jwt.svg?maxAge=2592000&style=flat-square
+[npm-url]: https://npmjs.org/package/koa-jwt
+[travis-image]: https://img.shields.io/travis/koajs/jwt/koa-v2.svg?maxAge=2592000&style=flat-square
+[travis-url]: https://travis-ci.org/koajs/jwt
+[coveralls-image]: https://img.shields.io/coveralls/koajs/jwt/koa-v2.svg?maxAge=2592000&style=flat-square
+[coveralls-url]: https://coveralls.io/r/koajs/jwt?branch=koa-v2
+[node-image]: https://img.shields.io/node/v/koa-jwt.svg?maxAge=2592000&style=flat-square
+[node-url]: http://nodejs.org/download/
+[download-image]: https://img.shields.io/npm/dm/koa-jwt.svg?maxAge=2592000&style=flat-square
+[download-url]: https://npmjs.org/package/koa-jwt
+[license-image]: https://img.shields.io/npm/l/koa-jwt.svg?maxAge=2592000&style=flat-square
+[license-url]: https://github.com/koajs/jwt/blob/koa-v2/LICENSE
 
 Koa middleware that validates JSON Web Tokens and sets `ctx.state.user`
 (by default) if a valid token is provided.
