@@ -1,7 +1,7 @@
 'use strict';
 const Koa = require('koa');
 const koajwt = require('../lib');
-const jwt = require('jsonwebtoken');
+const jwt = require('jwt-then')._jwt;
 
 const profile = {
   id: 123

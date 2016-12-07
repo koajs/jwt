@@ -32,8 +32,7 @@
   "license": "MIT",
   "main": "./lib",
   "dependencies": {
-    "bluebird": "^3.4.6",
-    "jsonwebtoken": "^7.1.9",
+    "jwt-then": "^0.6.0",
     "koa-unless": "^1.0.0"
   },
   "devDependencies": {

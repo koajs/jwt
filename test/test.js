@@ -4,7 +4,7 @@ const TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIiLCJpYXQiOjE0
 const Koa     = require('koa');
 const request = require('supertest');
 const assert  = require('assert');
-const jwt     = require('jsonwebtoken');
+const jwt     = require('jwt-then')._jwt;
 
 const koajwt  = require('../lib');
 
