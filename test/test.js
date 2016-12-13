@@ -5,7 +5,7 @@ const Koa     = require('koa');
 const request = require('supertest');
 const assert  = require('assert');
 const jwt     = require('jsonwebtoken');
-
+const Promise = require('bluebird');
 const koajwt  = require('../lib');
 
 describe('failure tests', function () {
@@ -179,6 +179,24 @@ describe('failure tests', function () {
       .set('Authorization', 'Bearer ' + token)
       .expect(401)
       .expect('Invalid token - invalid signature\n')
+      .end(done);
+  });
+
+   it('should throw 401 if revoked token', function(done) {
+
+    const isRevoked = (ctx, token) => Promise.reject(new Error('Revoked token'));
+    var secret = 'shhhhhh';
+    var token = jwt.sign({foo: 'bar'}, secret);
+
+    var app = new Koa();
+
+    app.use(koajwt({ secret: secret, isRevoked, debug: true }));
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(401)
+      .expect('Invalid token - Revoked token\n')
       .end(done);
   });
 
@@ -447,4 +465,31 @@ describe('unless tests', function () {
       .end(done);
 
   });
+
+  it('should work if authorization header is valid jwt and is not revoked', function(done) {
+    var validUserResponse = function(res) {
+      if (!(res.body.foo === 'bar')) return "Wrong user";
+    }
+
+    var isRevoked = (token, ctx) => Promise.resolve(true);
+
+    var secret = 'shhhhhh';
+    var token = jwt.sign({foo: 'bar'}, secret);
+
+    var app = new Koa();
+
+    app.use(koajwt({ secret: secret, isRevoked }));
+    app.use(function (ctx) {
+      ctx.body = ctx.state.user;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(200)
+      .expect(validUserResponse)
+      .end(done);
+
+  });
+  
 });
