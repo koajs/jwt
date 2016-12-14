@@ -84,10 +84,10 @@ match the following interface:
 ```js
 /**
  * Your custom isRevoked resolver
- * @this The ctx object passed to the middleware
- *
+ * 
  * @param  {object}      ctx The ctx object passed to the middleware
  * @param  {object}      token token The token
+ * @param  {object}      user Content of the token
  * @return {Promise}     If the token is revoked, the promise will reject, otherwise the promise will resolve. 
  */
 ```

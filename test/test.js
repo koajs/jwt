@@ -182,9 +182,27 @@ describe('failure tests', function () {
       .end(done);
   });
 
-   it('should throw 401 if revoked token', function(done) {
+  it('should throw 401 if isRevoked throw error', function(done) {
 
-    const isRevoked = (ctx, token) => Promise.reject(new Error('Revoked token'));
+    const isRevoked = (ctx, token, user) => Promise.reject(new Error('Revoked token'));
+    var secret = 'shhhhhh';
+    var token = jwt.sign({foo: 'bar'}, secret);
+
+    var app = new Koa();
+
+    app.use(koajwt({ secret: secret, isRevoked, debug: true }));
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(401)
+      .expect('Invalid token - Revoked token\n')
+      .end(done);
+  });
+
+  it('should throw 401 if revoked token', function(done) {
+
+    const isRevoked = (ctx, token, user) => Promise.resolve(true);
     var secret = 'shhhhhh';
     var token = jwt.sign({foo: 'bar'}, secret);
 
@@ -471,7 +489,7 @@ describe('unless tests', function () {
       if (!(res.body.foo === 'bar')) return "Wrong user";
     }
 
-    var isRevoked = (token, ctx) => Promise.resolve(true);
+    var isRevoked = (token, ctx, user) => Promise.resolve(false);
 
     var secret = 'shhhhhh';
     var token = jwt.sign({foo: 'bar'}, secret);
