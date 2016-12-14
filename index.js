@@ -17,7 +17,7 @@ export default (opts) => {
     tokenResolvers.unshift(opts.getToken);
   }
 
-  const middleware = await (next) => {
+  const middleware = async (next) => {
     let token, msg, user, parts, scheme, credentials, secret;
 
     for (let i = 0; i < tokenResolvers.length; i++) {
