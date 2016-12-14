@@ -88,7 +88,7 @@ match the following interface:
  * @param  {object}      ctx The ctx object passed to the middleware
  * @param  {object}      token token The token
  * @param  {object}      user Content of the token
- * @return {Promise}     If the token is revoked, the promise will reject, otherwise the promise will resolve. 
+ * @return {Promise}     If the token is not revoked, the promise must resolve with false, otherwise (the promise resolve with false or error) the token is revoked
  */
 ```
 
