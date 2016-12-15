@@ -1,0 +1,6 @@
+[ignore]
+.*/node_modules/flow-bin/.*
+.*/node_modules/y18n/.*
+
+[libs]
+./resources/interfaces

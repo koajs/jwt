@@ -1,3 +1,5 @@
+/* @flow */
+
 import assert from 'assert';
 import thunkify from 'thunkify';
 import _JWT from 'jsonwebtoken';
@@ -17,7 +19,7 @@ export default (opts) => {
     tokenResolvers.unshift(opts.getToken);
   }
 
-  const middleware = async (next) => {
+  async function middleware(next) {
     let token, msg, user, parts, scheme, credentials, secret;
 
     for (let i = 0; i < tokenResolvers.length; i++) {
@@ -51,9 +53,11 @@ export default (opts) => {
     } else {
       this.throw(401, msg);
     }
-  };
 
-  middleware.unless = unless;
+    this.unless = unless;
+  }
+
+  // middleware.unless = unless;
 
   return middleware;
 };
