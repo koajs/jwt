@@ -1,27 +1,29 @@
-var assert   = require('assert');
-var thunkify = require('thunkify');
-var _JWT     = require('jsonwebtoken');
-var unless   = require('koa-unless');
-var util     = require('util');
+/* @flow */
+
+import assert from 'assert';
+import thunkify from 'thunkify';
+import _JWT from 'jsonwebtoken';
+import unless from 'koa-unless';
+import util from 'util';
 
 // Make verify function play nice with co/koa
-var JWT = {decode: _JWT.decode, sign: _JWT.sign, verify: thunkify(_JWT.verify)};
+const JWT = {decode: _JWT.decode, sign: _JWT.sign, verify: thunkify(_JWT.verify)};
 
-module.exports = function(opts) {
+export default (opts) => {
   opts = opts || {};
   opts.key = opts.key || 'user';
 
-  var tokenResolvers = [resolveCookies, resolveAuthorizationHeader];
+  const tokenResolvers = [resolveCookies, resolveAuthorizationHeader];
 
   if (opts.getToken && util.isFunction(opts.getToken)) {
     tokenResolvers.unshift(opts.getToken);
   }
 
-  var middleware = function *jwt(next) {
-    var token, msg, user, parts, scheme, credentials, secret;
+  async function middleware(next) {
+    let token, msg, user, parts, scheme, credentials, secret;
 
-    for (var i = 0; i < tokenResolvers.length; i++) {
-      var output = tokenResolvers[i].call(this, opts);
+    for (let i = 0; i < tokenResolvers.length; i++) {
+      const output = tokenResolvers[i].call(this, opts);
 
       if (output) {
         token = output;
@@ -39,7 +41,7 @@ module.exports = function(opts) {
     }
 
     try {
-      user = yield JWT.verify(token, secret, opts);
+      user = await JWT.verify(token, secret, opts);
     } catch(e) {
       msg = 'Invalid token' + (opts.debug ? ' - ' + e.message + '\n' : '\n');
     }
@@ -47,13 +49,15 @@ module.exports = function(opts) {
     if (user || opts.passthrough) {
       this.state = this.state || {};
       this.state[opts.key] = user;
-      yield next;
+      await next;
     } else {
       this.throw(401, msg);
     }
-  };
 
-  middleware.unless = unless;
+    this.unless = unless;
+  }
+
+  // middleware.unless = unless;
 
   return middleware;
 };
@@ -69,16 +73,16 @@ module.exports = function(opts) {
  * @param  {object}      opts The middleware's options
  * @return {String|null}      The resolved token or null if not found
  */
-function resolveAuthorizationHeader(opts) {
+const resolveAuthorizationHeader = (opts) => {
   if (!this.header || !this.header.authorization) {
     return;
   }
 
-  var parts = this.header.authorization.split(' ');
+  const parts = this.header.authorization.split(' ');
 
   if (parts.length === 2) {
-    var scheme = parts[0];
-    var credentials = parts[1];
+    const scheme = parts[0];
+    const credentials = parts[1];
 
     if (/^Bearer$/i.test(scheme)) {
       return credentials;
@@ -101,13 +105,13 @@ function resolveAuthorizationHeader(opts) {
  * @param  {object}      opts This middleware's options
  * @return {String|null}      The resolved token or null if not found
  */
-function resolveCookies(opts) {
+const resolveCookies = (opts) => {
   if (opts.cookie && this.cookies.get(opts.cookie)) {
     return this.cookies.get(opts.cookie);
   }
 }
 
 // Export JWT methods as a convenience
-module.exports.sign   = _JWT.sign;
-module.exports.verify = _JWT.verify;
-module.exports.decode = _JWT.decode;
+export const sign = _JWT.sign;
+export const verify = _JWT.verify;
+export const decode = _JWT.decode;
