@@ -180,6 +180,20 @@ describe('failure tests', function () {
         .end(done);
   });
 
+  it('should throw with last error message if all secrets are wrong', function (done) {
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar', iss: 'http://foo', exp: 0}, secret);
+
+    var app = koa();
+
+    app.use(koajwt({secret: ['wrong-secret', secret], debug: true}));
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(401)
+      .expect('Invalid token - jwt expired\n')
+      .end(done);
+  });
 });
 
 describe('passthrough tests', function () {
@@ -375,6 +389,29 @@ describe('success tests', function () {
         .expect(200)
         .expect(validUserResponse)
         .end(done);
+  });
+
+  it('should support several secrets', function (done) {
+    var validUserResponse = function(res) {
+      if (!(res.body.foo === 'bar')) return "Wrong user";
+    }
+
+    var validSecret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar'}, validSecret);
+
+    var app = koa();
+
+    app.use(koajwt({ secret: ['wrong secret', validSecret] }));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(200)
+      .expect(validUserResponse)
+      .end(done);
   });
 });
 

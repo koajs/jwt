@@ -53,6 +53,9 @@ alternative is to have an earlier middleware set `ctx.state.secret`,
 typically per request. If this property exists, it will be used instead
 of the one in `opts.secret`.
 
+The secret can also be an array. In that case all the secrets will be
+tried in order.
+
 
 ## Example
 

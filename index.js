@@ -34,14 +34,19 @@ module.exports = function(opts) {
     }
 
     secret = (this.state && this.state.secret) ? this.state.secret : opts.secret;
+
     if (!secret) {
       this.throw(500, 'Invalid secret\n');
     }
 
-    try {
-      user = yield JWT.verify(token, secret, opts);
-    } catch(e) {
-      msg = 'Invalid token' + (opts.debug ? ' - ' + e.message + '\n' : '\n');
+    secret = (Array.isArray(secret)) ? secret : [secret];
+
+    for (var i = 0; i < secret.length; i++) {
+      try {
+        user = yield JWT.verify(token, secret[i], opts);
+      } catch(e) {
+        msg = 'Invalid token' + (opts.debug ? ' - ' + e.message + '\n' : '\n');
+      }
     }
 
     if (user || opts.passthrough) {
