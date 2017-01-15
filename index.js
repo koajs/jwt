@@ -47,6 +47,7 @@ module.exports = function(opts) {
     if (user || opts.passthrough) {
       this.state = this.state || {};
       this.state[opts.key] = user;
+      this.state.token = token;
       yield next;
     } else {
       this.throw(401, msg);
