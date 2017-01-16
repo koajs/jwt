@@ -5,7 +5,6 @@ const Koa     = require('koa');
 const request = require('supertest');
 const assert  = require('assert');
 const jwt     = require('jsonwebtoken');
-const Promise = require('bluebird');
 const koajwt  = require('../lib');
 
 describe('failure tests', function () {
