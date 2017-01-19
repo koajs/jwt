@@ -10,6 +10,7 @@ var JWT = {decode: _JWT.decode, sign: _JWT.sign, verify: thunkify(_JWT.verify)};
 module.exports = function(opts) {
   opts = opts || {};
   opts.key = opts.key || 'user';
+  opts.tokenKey = opts.tokenKey || 'token';
 
   var tokenResolvers = [resolveCookies, resolveAuthorizationHeader];
 
@@ -47,7 +48,7 @@ module.exports = function(opts) {
     if (user || opts.passthrough) {
       this.state = this.state || {};
       this.state[opts.key] = user;
-      this.state.token = token;
+      this.state[opts.tokenKey] = token;
       yield next;
     } else {
       this.throw(401, msg);

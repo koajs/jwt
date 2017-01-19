@@ -372,9 +372,9 @@ describe('success tests', function () {
 
     var app = koa();
 
-    app.use(koajwt({ secret: secret, key: 'jwtdata' }));
+    app.use(koajwt({ secret: secret, key: 'jwtdata', tokenKey: 'testTokenKey' }));
     app.use(function* (next) {
-      this.body = { token: this.state.token };
+      this.body = { token: this.state.testTokenKey };
     });
 
     request(app.listen())
