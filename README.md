@@ -1,5 +1,8 @@
 # koa-jwt
 
+Master branch (koa v1): [![Build Status - master](https://travis-ci.org/koajs/jwt.svg?branch=master)](https://travis-ci.org/koajs/jwt)
+koa-v2 branch: [![Build Status - koa-v2](https://travis-ci.org/koajs/jwt.svg?branch=koa-v2)](https://travis-ci.org/koajs/jwt)
+
 Koa middleware that validates JSON Web Tokens and sets `ctx.state.user`
 (by default) if a valid token is provided.
 
@@ -9,7 +12,7 @@ in your [Koa](http://koajs.com/) (node.js) applications.
 See [this article](http://blog.auth0.com/2014/01/07/angularjs-authentication-with-cookies-vs-token/)
 for a good introduction.
 
-## Install
+## Installation
 
 ```
 $ npm install koa-jwt
@@ -146,6 +149,9 @@ app.use(jwt({ secret: 'shared-secret', key: 'jwtdata' }));
 ```
 This makes the decoded data available as `ctx.state.jwtdata`.
 
+If a valid token is found, the original raw token is made available as `ctx.state.token`.
+You can use a different key in `ctx.state` by setting `opts.tokenKey` to your desired key.
+
 You can specify audience and/or issuer as well:
 ```js
 app.use(jwt({ secret:   'shared-secret',
@@ -196,6 +202,8 @@ This code is largely based on [express-jwt](https://github.com/auth0/express-jwt
 - [sc0ttyd](https://github.com/sc0ttyd)
 - [Jackong](https://github.com/Jackong)
 - [danwkennedy](https://github.com/danwkennedy)
+- [petermelias](https://github.com/petermelias)
+- [jhnns](https://github.com/jhnns)
 
 ## License
 

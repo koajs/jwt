@@ -50,6 +50,6 @@
     "node": ">= 0.12.0"
   },
   "scripts": {
-    "test": "make test"
+    "test": "mocha --reporter spec --bail ./test.js"
   }
 }
