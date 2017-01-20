@@ -1,7 +1,7 @@
-var assert   = require('assert');
 var thunkify = require('thunkify');
 var _JWT     = require('jsonwebtoken');
 var unless   = require('koa-unless');
+var url      = require('url');
 
 // Make verify function play nice with co/koa
 var JWT = {decode: _JWT.decode, sign: _JWT.sign, verify: thunkify(_JWT.verify)};
@@ -18,7 +18,7 @@ module.exports = function(opts) {
   }
 
   var middleware = function *jwt(next) {
-    var token, msg, user, parts, scheme, credentials, secret;
+    var token, msg, user, parts, scheme, credentials, secret, passthrough;
 
     for (var i = 0; i < tokenResolvers.length; i++) {
       var output = tokenResolvers[i].call(this, opts);
@@ -44,7 +44,7 @@ module.exports = function(opts) {
       msg = 'Invalid token' + (opts.debug ? ' - ' + e.message + '\n' : '\n');
     }
 
-    if (user || opts.passthrough) {
+    if (user || passthrough) {
       this.state = this.state || {};
       this.state[opts.key] = user;
       this.state[opts.tokenKey] = token;

@@ -134,7 +134,7 @@ describe('failure tests', function () {
 
   it('should throw if token is expired', function(done) {
     var secret = 'shhhhhh';
-    var token = koajwt.sign({foo: 'bar', exp: 1382412921 }, secret);
+    var token = koajwt.sign({foo: 'bar', exp: 1382412921}, secret);
 
     var app = koa();
 
@@ -185,11 +185,11 @@ describe('failure tests', function () {
 
     app.use(koajwt({secret: 'wrong secret', debug: true}));
     request(app.listen())
-        .get('/')
-        .set('Authorization', 'Bearer ' + token)
-        .expect(401)
-        .expect('Invalid token - invalid signature\n')
-        .end(done);
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(401)
+      .expect('Invalid token - invalid signature\n')
+      .end(done);
   });
 
 });
@@ -209,10 +209,39 @@ describe('passthrough tests', function () {
       .expect('')
       .end(done);
   });
+
+  it('should continue if `passthrough` is a RegExp and the path matches', function (done) {
+    var app = koa();
+
+    app.use(koajwt({ secret: 'shhhhhh', passthrough: /^\/passthrough/, debug: true }));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+      .get('/passthrough')
+      .expect(204) // No content
+      .expect('')
+      .end(done);
+  });
+
+  it('should not continue if `passthrough` is a RegExp and the path does not match', function (done) {
+    var app = koa();
+
+    app.use(koajwt({ secret: 'shhhhhh', passthrough: /^\/passthrough/, debug: true }));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+      .get('/dontpassthrough')
+      .expect(401)
+      .expect('No Authorization header found\n')
+      .end(done);
+  });
 });
 
-
-describe('success tests', function () {
+describe('success tests', function() {
 
   it('should work if authorization header is valid jwt', function(done) {
     var validUserResponse = function(res) {
@@ -230,11 +259,11 @@ describe('success tests', function () {
     });
 
     request(app.listen())
-      .get('/')
-      .set('Authorization', 'Bearer ' + token)
-      .expect(200)
-      .expect(validUserResponse)
-      .end(done);
+    .get('/')
+    .set('Authorization', 'Bearer ' + token)
+    .expect(200)
+    .expect(validUserResponse)
+    .end(done);
 
   });
 
@@ -310,6 +339,30 @@ describe('success tests', function () {
 
   });
 
+  it('should work if opts.cookies is set and there is no cookie but there is an authorization header with valid jwt', function(done) {
+    var validUserResponse = function(res) {
+      if (!(res.body.foo === 'bar')) return "Wrong user";
+    }
+
+    var secret = 'shhhhhh';
+    var token = koajwt.sign({foo: 'bar', cookie: 'jwt'}, secret);
+
+    var app = koa();
+
+    app.use(koajwt({secret: secret}));
+    app.use(function* (next) {
+      this.body = this.state.user;
+    });
+
+    request(app.listen())
+    .get('/')
+    .set('Authorization', 'Bearer ' + token)
+    .expect(200)
+    .expect(validUserResponse)
+    .end(done);
+
+  });
+
   it('should use provided key for decoded data', function(done) {
     var validUserResponse = function(res) {
       if (!(res.body.foo === 'bar')) return "Key param not used properly";
@@ -326,11 +379,11 @@ describe('success tests', function () {
     });
 
     request(app.listen())
-      .get('/')
-      .set('Authorization', 'Bearer ' + token)
-      .expect(200)
-      .expect(validUserResponse)
-      .end(done);
+    .get('/')
+    .set('Authorization', 'Bearer ' + token)
+    .expect(200)
+    .expect(validUserResponse)
+    .end(done);
 
   });
 
@@ -345,8 +398,8 @@ describe('success tests', function () {
     var app = koa();
 
     app.use(function *(next) {
-        this.state.secret = secret;
-        yield next;
+      this.state.secret = secret;
+      yield next;
     });
     app.use(koajwt());
     app.use(function* (next) {
@@ -354,13 +407,12 @@ describe('success tests', function () {
     });
 
     request(app.listen())
-        .get('/')
-        .set('Authorization', 'Bearer ' + token)
-        .expect(200)
-        .expect(validUserResponse)
-        .end(done);
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(200)
+      .expect(validUserResponse)
+      .end(done);
   });
-
 
   it('should provide the raw token to the state context', function (done) {
     var validUserResponse = function (res) {
@@ -405,11 +457,11 @@ describe('success tests', function () {
     });
 
     request(app.listen())
-        .get('/')
-        .set('Authorization', 'Bearer ' + token)
-        .expect(200)
-        .expect(validUserResponse)
-        .end(done);
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(200)
+      .expect(validUserResponse)
+      .end(done);
   });
 });
 
