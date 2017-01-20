@@ -75,6 +75,25 @@ typically per request. If this property exists, it will be used instead
 of the one in `opts.secret`.
 
 
+### Checking if the token is revoked
+
+You can provide a async function to jwt for it check the token is revoked.
+Only you set the function in `opts.isRevoked`. The provided function should 
+match the following interface:
+
+```js
+/**
+ * Your custom isRevoked resolver
+ * 
+ * @param  {object}      ctx The ctx object passed to the middleware
+ * @param  {object}      token token The token
+ * @param  {object}      user Content of the token
+ * @return {Promise}     If the token is not revoked, the promise must resolve with false, otherwise (the promise resolve with false or error) the token is revoked
+ */
+```
+
+
+
 ## Example
 
 ```js
@@ -181,6 +200,8 @@ of a secret, you can specify a Buffer with the public key:
 var publicKey = fs.readFileSync('/path/to/public.pub');
 app.use(jwt({ secret: publicKey }));
 ```
+
+
 
 ## Related Modules
 
