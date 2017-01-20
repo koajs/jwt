@@ -1,6 +1,6 @@
 # koa-jwt
 
-Master branch (koa v1): [![Build Status - master](https://travis-ci.org/koajs/jwt.svg?branch=master)](https://travis-ci.org/koajs/jwt)\s
+Master branch (koa v1): [![Build Status - master](https://travis-ci.org/koajs/jwt.svg?branch=master)](https://travis-ci.org/koajs/jwt)
 koa-v2 branch: [![Build Status - koa-v2](https://travis-ci.org/koajs/jwt.svg?branch=koa-v2)](https://travis-ci.org/koajs/jwt)
 
 Koa middleware that validates JSON Web Tokens and sets `ctx.state.user`
