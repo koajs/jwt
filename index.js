@@ -2,7 +2,6 @@ var assert   = require('assert');
 var thunkify = require('thunkify');
 var _JWT     = require('jsonwebtoken');
 var unless   = require('koa-unless');
-var util     = require('util');
 
 // Make verify function play nice with co/koa
 var JWT = {decode: _JWT.decode, sign: _JWT.sign, verify: thunkify(_JWT.verify)};
@@ -14,7 +13,7 @@ module.exports = function(opts) {
 
   var tokenResolvers = [resolveCookies, resolveAuthorizationHeader];
 
-  if (opts.getToken && util.isFunction(opts.getToken)) {
+  if (opts.getToken && typeof opts.getToken === 'function') {
     tokenResolvers.unshift(opts.getToken);
   }
 
