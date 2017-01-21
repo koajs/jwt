@@ -386,6 +386,27 @@ describe('success tests', () => {
         .end(done);
   });
 
+  it('should provide the raw token to the state context', function (done) {
+    const validUserResponse = res => res.body.token !== token && "Token not passed through";
+
+    const secret = 'shhhhhh';
+    const token = jwt.sign({foo: 'bar'}, secret);
+
+    const app = new Koa();
+
+    app.use(koajwt({ secret: secret, key: 'jwtdata', tokenKey: 'testTokenKey' }));
+    app.use((ctx, next) => {
+      ctx.body = { token: ctx.state.testTokenKey };
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(200)
+      .expect(validUserResponse)
+      .end(done);
+    });
+
 
   it('should use middleware secret if both middleware and options provided', done => {
     const validUserResponse = res => res.body.foo !== 'bar' && "Wrong user";
