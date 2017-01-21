@@ -31,6 +31,18 @@ describe('failure tests', () => {
       .end(done);
   });
 
+  it('should return 401 if authorization header does not start with Bearer', done => {
+    const app = new Koa();
+
+    app.use(koajwt({ secret: 'shhhh' }));
+    request(app.listen())
+    .get('/')
+    .set('Authorization', 'Bearskin Jacket')
+    .expect(401)
+    .expect('Bad Authorization header format. Format is "Authorization: Bearer <token>"\n')
+    .end(done);
+  });
+
   it('should allow provided getToken function to throw', done => {
     const app = new Koa();
 
