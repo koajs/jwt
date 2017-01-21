@@ -386,7 +386,7 @@ describe('success tests', () => {
         .end(done);
   });
 
-  it('should provide the raw token to the state context', function (done) {
+  it('should populate the raw token to ctx.state, in key from opts.tokenKey', done => {
     const validUserResponse = res => res.body.token !== token && "Token not passed through";
 
     const secret = 'shhhhhh';
@@ -395,7 +395,7 @@ describe('success tests', () => {
     const app = new Koa();
 
     app.use(koajwt({ secret: secret, key: 'jwtdata', tokenKey: 'testTokenKey' }));
-    app.use((ctx, next) => {
+    app.use(ctx => {
       ctx.body = { token: ctx.state.testTokenKey };
     });
 
