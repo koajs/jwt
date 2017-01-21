@@ -243,6 +243,7 @@ This code is largely based on [express-jwt](https://github.com/auth0/express-jwt
 - [danwkennedy](https://github.com/danwkennedy)
 - [nfantone](https://github.com/nfantone)
 - [scttcper](https://github.com/scttcper)
+- [jhnns](https://github.com/jhnns)
 
 
 ## License
