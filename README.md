@@ -241,6 +241,9 @@ This code is largely based on [express-jwt](https://github.com/auth0/express-jwt
 - [sc0ttyd](https://github.com/sc0ttyd)
 - [Jackong](https://github.com/Jackong)
 - [danwkennedy](https://github.com/danwkennedy)
+- [nfantone](https://github.com/nfantone)
+- [scttcper](https://github.com/scttcper)
+
 
 ## License
 
