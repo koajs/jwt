@@ -24,11 +24,15 @@ koa-jwt
 Koa middleware that validates JSON Web Tokens and sets `ctx.state.user`
 (by default) if a valid token is provided.
 
+If you are using koa v1.x, please use the [master](https://github.com/koajs/jwt) branch and version 1.x of this project on npm.  
+If you are using koa v2, use the [koa-v2](https://github.com/koajs/jwt/tree/koa-v2) branch and version 2.x of this project on npm.
+
 This module lets you authenticate HTTP requests using JSON Web Tokens
 in your [Koa](http://koajs.com/) (node.js) applications.
 
 See [this article](http://blog.auth0.com/2014/01/07/angularjs-authentication-with-cookies-vs-token/)
 for a good introduction.
+
 
 ## Install
 
@@ -67,6 +71,7 @@ The resolution order for the token is the following. The first non-empty token r
  - check the cookies (if `opts.cookie` is set)
  - check the Authorization header for a bearer token
 
+
 ### Passing the secret
 
 Normally you provide a single shared secret in `opts.secret`, but another
@@ -91,7 +96,6 @@ match the following interface:
  * @return {Promise}     If the token is not revoked, the promise must resolve with false, otherwise (the promise resolve with false or error) the token is revoked
  */
 ```
-
 
 
 ## Example
@@ -135,7 +139,6 @@ app.use(function(ctx){
 
 app.listen(3000);
 ```
-
 
 Alternatively you can conditionally run the `jwt` middleware under certain conditions:
 
@@ -192,6 +195,8 @@ app.use(jwt({ secret:   'shared-secret',
 ```
 If the JWT has an expiration (`exp`), it will be checked.
 
+If the `tokenKey` option is present, and a valid token is found, the original raw token 
+is made available to subsequent middleware as `ctx.state[opts.tokenKey]`. 
 
 This module also support tokens signed with public/private key pairs. Instead
 of a secret, you can specify a Buffer with the public key:
@@ -201,23 +206,24 @@ var publicKey = fs.readFileSync('/path/to/public.pub');
 app.use(jwt({ secret: publicKey }));
 ```
 
-
-
 ## Related Modules
 
 - [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) — JSON Web Token signing
 and verification
 
-Note that koa-jwt exports the `sign`, `verify` and `decode` functions from the above module as a convenience.
+Note that koa-jwt no longer exports the `sign`, `verify` and `decode` functions from `jsonwebtoken` in the koa-v2 branch.
+
 
 ## Tests
 
     $ npm install
     $ npm test
 
+
 ## Author
 
 Stian Grytøyr
+
 
 ## Credits
 
@@ -225,6 +231,7 @@ This code is largely based on [express-jwt](https://github.com/auth0/express-jwt
 
   - [Auth0](http://auth0.com/)
   - [Matias Woloski](http://github.com/woloski)
+
 
 ## Contributors
 - [Foxandxss](https://github.com/Foxandxss)
@@ -236,6 +243,10 @@ This code is largely based on [express-jwt](https://github.com/auth0/express-jwt
 - [sc0ttyd](https://github.com/sc0ttyd)
 - [Jackong](https://github.com/Jackong)
 - [danwkennedy](https://github.com/danwkennedy)
+- [nfantone](https://github.com/nfantone)
+- [scttcper](https://github.com/scttcper)
+- [jhnns](https://github.com/jhnns)
+
 
 ## License
 
