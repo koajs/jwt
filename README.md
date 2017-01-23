@@ -195,9 +195,8 @@ app.use(jwt({ secret:   'shared-secret',
 ```
 If the JWT has an expiration (`exp`), it will be checked.
 
-If a valid token is found, the original raw token is made available as `ctx.state.token`.
-153	You can use a different key in `ctx.state` by setting `opts.tokenKey` to your desired key.
-
+If the `tokenKey` option is present, and a valid token is found, the original raw token 
+is made available to subsequent middleware as `ctx.state[opts.tokenKey]`. 
 
 This module also support tokens signed with public/private key pairs. Instead
 of a secret, you can specify a Buffer with the public key:
