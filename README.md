@@ -149,8 +149,8 @@ app.use(jwt({ secret: 'shared-secret', key: 'jwtdata' }));
 ```
 This makes the decoded data available as `ctx.state.jwtdata`.
 
-If a valid token is found, the original raw token is made available as `ctx.state.token`.
-You can use a different key in `ctx.state` by setting `opts.tokenKey` to your desired key.
+If the `tokenKey` option is present, and a valid token is found, the original raw token
+is made available to subsequent middleware as `ctx.state[opts.tokenKey]`.
 
 You can specify audience and/or issuer as well:
 ```js
