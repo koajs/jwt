@@ -385,6 +385,30 @@ describe('success tests', () => {
         .expect(validUserResponse)
         .end(done);
   });
+  
+  it('should not overwrite ctx.state.token on successful token verification if opts.tokenKey is undefined', done => {
+    const validUserResponse = res => res.body.token === "DONT_CLOBBER_ME";
+
+    const secret = 'shhhhhh';
+    const token = jwt.sign({foo: 'bar'}, secret);
+
+    const app = new Koa();
+
+    app.use(ctx => {
+      ctx.state = { token: 'DONT_CLOBBER_ME' };
+    });
+    app.use(koajwt({ secret: secret, key: 'jwtdata' }));
+    app.use(ctx => {
+      ctx.body = { token: ctx.state.token };
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(200)
+      .expect(validUserResponse)
+      .end(done);
+    });
 
   it('should populate the raw token to ctx.state, in key from opts.tokenKey', done => {
     const validUserResponse = res => res.body.token !== token && "Token not passed through";
