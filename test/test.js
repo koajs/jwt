@@ -387,15 +387,16 @@ describe('success tests', () => {
   });
   
   it('should not overwrite ctx.state.token on successful token verification if opts.tokenKey is undefined', done => {
-    const validUserResponse = res => res.body.token === "DONT_CLOBBER_ME";
+    const validUserResponse = res => res.body.token === "DONT_CLOBBER_ME" && "ctx.state.token not clobbered";
 
     const secret = 'shhhhhh';
     const token = jwt.sign({foo: 'bar'}, secret);
 
     const app = new Koa();
 
-    app.use(ctx => {
+    app.use((ctx, next) => {
       ctx.state = { token: 'DONT_CLOBBER_ME' };
+      return next();
     });
     app.use(koajwt({ secret: secret, key: 'jwtdata' }));
     app.use(ctx => {
@@ -408,7 +409,7 @@ describe('success tests', () => {
       .expect(200)
       .expect(validUserResponse)
       .end(done);
-    });
+  });
 
   it('should populate the raw token to ctx.state, in key from opts.tokenKey', done => {
     const validUserResponse = res => res.body.token !== token && "Token not passed through";
