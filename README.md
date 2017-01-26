@@ -174,7 +174,8 @@ app.use(jwt({ secret: publicKey }));
 - [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) — JSON Web Token signing
 and verification
 
-Note that koa-jwt exports the `sign`, `verify` and `decode` functions from the above module as a convenience.
+Note that koa-jwt no longer exports the `sign`, `verify` and `decode` functions from the above module.
+Please use the module directly.
 
 ## Tests
 
