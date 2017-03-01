@@ -1,8 +1,7 @@
 language: node_js
 node_js:
-  - "4"
-  - "6"
-  - "node"
+  - "7.6"
+  - "stable"
 sudo: false
 after_script:
   - npm i coveralls
