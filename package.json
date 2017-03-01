@@ -1,6 +1,6 @@
 {
   "name": "koa-jwt",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Koa JWT authentication middleware.",
   "keywords": [
     "auth",
@@ -31,9 +31,6 @@
   },
   "license": "MIT",
   "main": "./lib",
-  "publishConfig": {
-    "tag": "koa2"
-  },
   "dependencies": {
     "bluebird": "^3.4.6",
     "jsonwebtoken": "^7.1.9",
@@ -46,7 +43,7 @@
     "supertest": "~2.0.0"
   },
   "engines": {
-    "node": ">= 4.0.0"
+    "node": ">= 7.6.0"
   },
   "scripts": {
     "test": "istanbul cover node_modules/mocha/bin/_mocha -- --reporter spec --bail test/test.js",
