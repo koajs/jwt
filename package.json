@@ -39,14 +39,14 @@
     "report-dir": "./coverage"
   },
   "dependencies": {
-    "jsonwebtoken": "^7.1.9",
+    "jsonwebtoken": "^7.3.0",
     "koa-unless": "^1.0.0"
   },
   "devDependencies": {
-    "koa": "^2.0.0",
-    "mocha": "~3.1.0",
+    "koa": "^2.0.1",
+    "mocha": "~3.2.0",
     "nyc": "^10.1.2",
-    "supertest": "~2.0.0"
+    "supertest": "~3.0.0"
   },
   "engines": {
     "node": ">= 7.6.0"
