@@ -31,22 +31,28 @@
   },
   "license": "MIT",
   "main": "./lib",
+  "nyc": {
+    "reporter": [
+      "lcov",
+      "text-summary"
+    ],
+    "report-dir": "./coverage"
+  },
   "dependencies": {
-    "bluebird": "^3.4.6",
-    "jsonwebtoken": "^7.1.9",
+    "jsonwebtoken": "^7.3.0",
     "koa-unless": "^1.0.0"
   },
   "devDependencies": {
-    "istanbul": "~0.4.5",
-    "koa": "^2.0.0",
-    "mocha": "~3.1.0",
-    "supertest": "~2.0.0"
+    "koa": "^2.0.1",
+    "mocha": "~3.2.0",
+    "nyc": "^10.1.2",
+    "supertest": "~3.0.0"
   },
   "engines": {
     "node": ">= 7.6.0"
   },
   "scripts": {
-    "test": "istanbul cover node_modules/mocha/bin/_mocha -- --reporter spec --bail test/test.js",
+    "test": "nyc npm run test-only",
     "test-only": "mocha --reporter spec --bail test/test.js"
   }
 }
