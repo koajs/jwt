@@ -385,7 +385,29 @@ describe('success tests', () => {
         .expect(validUserResponse)
         .end(done);
   });
-  
+
+  it('should work if secret is provided by secret callback', done => {
+    const validUserResponse = res => res.body.foo !== 'bar' && "Wrong user";
+
+    const secret = 'shhhhhh';
+    const secretCb = (req, header, payload, callback) => callback(null, secret);
+    const token = jwt.sign({foo: 'bar'}, secret);
+
+    const app = new Koa();
+
+    app.use(koajwt({ secret: secretCb }));
+    app.use(ctx => {
+      ctx.body = ctx.state.user;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(200)
+      .expect(validUserResponse)
+      .end(done);
+  });
+
   it('should not overwrite ctx.state.token on successful token verification if opts.tokenKey is undefined', done => {
     const validUserResponse = res => res.body.token === "DONT_CLOBBER_ME" && "ctx.state.token not clobbered";
 

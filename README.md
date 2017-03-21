@@ -83,13 +83,13 @@ of the one in `opts.secret`.
 ### Checking if the token is revoked
 
 You can provide a async function to jwt for it check the token is revoked.
-Only you set the function in `opts.isRevoked`. The provided function should 
+Only you set the function in `opts.isRevoked`. The provided function should
 match the following interface:
 
 ```js
 /**
  * Your custom isRevoked resolver
- * 
+ *
  * @param  {object}      ctx The ctx object passed to the middleware
  * @param  {object}      token token The token
  * @param  {object}      user Content of the token
@@ -195,8 +195,8 @@ app.use(jwt({ secret:   'shared-secret',
 ```
 If the JWT has an expiration (`exp`), it will be checked.
 
-If the `tokenKey` option is present, and a valid token is found, the original raw token 
-is made available to subsequent middleware as `ctx.state[opts.tokenKey]`. 
+If the `tokenKey` option is present, and a valid token is found, the original raw token
+is made available to subsequent middleware as `ctx.state[opts.tokenKey]`.
 
 This module also support tokens signed with public/private key pairs. Instead
 of a secret, you can specify a Buffer with the public key:
@@ -205,6 +205,17 @@ of a secret, you can specify a Buffer with the public key:
 var publicKey = fs.readFileSync('/path/to/public.pub');
 app.use(jwt({ secret: publicKey }));
 ```
+
+RSA algorithm is also supported by providing jwks-rsa.expressJwtSecret callback in the
+`secret` config option:
+```js
+app.use(jwt({ secret:   jwks-rsa.expressJwtSecret({
+                          jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
+                        }),
+              audience: 'http://myapi/protected',
+              issuer:   'http://issuer' }));
+```
+
 
 ## Related Modules
 
