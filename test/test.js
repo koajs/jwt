@@ -386,16 +386,16 @@ describe('success tests', () => {
         .end(done);
   });
 
-  it('should work if secret is provided by secret callback', done => {
+  it('should work if secret is provided by deffered provider', done => {
     const validUserResponse = res => res.body.foo !== 'bar' && "Wrong user";
 
     const secret = 'shhhhhh';
-    const secretCb = (req, header, payload, callback) => callback(null, secret);
+    const provider = ({alg, kid}) => new Promise(resolve=>resolve(secret));
     const token = jwt.sign({foo: 'bar'}, secret);
 
     const app = new Koa();
 
-    app.use(koajwt({ secret: secretCb }));
+    app.use(koajwt({ secret: provider }));
     app.use(ctx => {
       ctx.body = ctx.state.user;
     });
