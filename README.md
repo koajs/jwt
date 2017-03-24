@@ -206,12 +206,12 @@ var publicKey = fs.readFileSync('/path/to/public.pub');
 app.use(jwt({ secret: publicKey }));
 ```
 
-RSA algorithm is also supported by providing jwks-rsa.expressJwtSecret callback in the
+RSA algorithm is also supported by providing jwks promise provider in the
 `secret` config option:
 ```js
-app.use(jwt({ secret:   jwks-rsa.expressJwtSecret({
-                          jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
-                        }),
+app.use(jwt({ secret: jwks-rsa.koaJwtSecret({
+                        jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
+                      }),
               audience: 'http://myapi/protected',
               issuer:   'http://issuer' }));
 ```
