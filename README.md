@@ -222,8 +222,7 @@ app.use(jwt({ secret: koaJwtSecret({
                         jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
                         cache: true,
                         cacheMaxEntries: 5,
-                        cacheMaxAge: ms('10h'),
-                      }),
+                        cacheMaxAge: ms('10h') }),
               audience: 'http://myapi/protected',
               issuer:   'http://issuer' }));
 ```
