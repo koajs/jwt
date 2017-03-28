@@ -83,13 +83,13 @@ of the one in `opts.secret`.
 ### Checking if the token is revoked
 
 You can provide a async function to jwt for it check the token is revoked.
-Only you set the function in `opts.isRevoked`. The provided function should 
+Only you set the function in `opts.isRevoked`. The provided function should
 match the following interface:
 
 ```js
 /**
  * Your custom isRevoked resolver
- * 
+ *
  * @param  {object}      ctx The ctx object passed to the middleware
  * @param  {object}      token token The token
  * @param  {object}      user Content of the token
@@ -195,8 +195,8 @@ app.use(jwt({ secret:   'shared-secret',
 ```
 If the JWT has an expiration (`exp`), it will be checked.
 
-If the `tokenKey` option is present, and a valid token is found, the original raw token 
-is made available to subsequent middleware as `ctx.state[opts.tokenKey]`. 
+If the `tokenKey` option is present, and a valid token is found, the original raw token
+is made available to subsequent middleware as `ctx.state[opts.tokenKey]`.
 
 This module also support tokens signed with public/private key pairs. Instead
 of a secret, you can specify a Buffer with the public key:
@@ -205,6 +205,28 @@ of a secret, you can specify a Buffer with the public key:
 var publicKey = fs.readFileSync('/path/to/public.pub');
 app.use(jwt({ secret: publicKey }));
 ```
+
+If the `secret` option is a function, this function is called for each JWT received in
+order to determine which secret is used to verify the JWT.
+
+The signature of this function should be `(header) => [Promise(secret)]`, where
+`header` is token header. For instance to support JWKS token header should contain
+`alg` and `kid`: algorithm and key id fields respectively.
+
+This option can be used to support JWKS (JSON Web Key Set) providers by using
+[node-jwks-rsa](https://github.com/auth0/node-jwks-rsa). For example:
+```js
+const { koaJwtSecret } = require('jwks-rsa');
+
+app.use(jwt({ secret: koaJwtSecret({
+                        jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
+                        cache: true,
+                        cacheMaxEntries: 5,
+                        cacheMaxAge: ms('10h') }),
+              audience: 'http://myapi/protected',
+              issuer:   'http://issuer' }));
+```
+
 
 ## Related Modules
 
