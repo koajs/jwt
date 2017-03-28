@@ -206,7 +206,7 @@ var publicKey = fs.readFileSync('/path/to/public.pub');
 app.use(jwt({ secret: publicKey }));
 ```
 
-If the secret option is a function, this function is called for each JWT received in
+If the 'secret' option is a function, this function is called for each JWT received in
 order to determine which secret is used to verify the JWT.
 
 The signature of this function should be (header) => [Promise(secret)], where
@@ -214,7 +214,7 @@ header is token header. For instance to support JWKS token header should contain
 alg and kid: algorithm and key id fields respectively.
 
 This option can be used to support JWKS (JSON Web Key Set) providers by using
-node-jwks-rsa. For example:
+[node-jwks-rsa](https://github.com/auth0/node-jwks-rsa). For example:
 ```js
 const { koaJwtSecret } = require('jwks-rsa');
 
