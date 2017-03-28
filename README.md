@@ -206,11 +206,23 @@ var publicKey = fs.readFileSync('/path/to/public.pub');
 app.use(jwt({ secret: publicKey }));
 ```
 
-RSA algorithm is also supported by providing jwks promise provider in the
-`secret` config option:
+If the secret option is a function, this function is called for each JWT received in
+order to determine which secret is used to verify the JWT.
+
+The signature of this function should be (header) => [Promise(secret)], where
+header is token header. For instance to support JWKS token header should contain
+alg and kid: algorithm and key id fields respectively.
+
+This option can be used to support JWKS (JSON Web Key Set) providers by using
+node-jwks-rsa. For example:
 ```js
-app.use(jwt({ secret: jwks-rsa.koaJwtSecret({
-                        jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json'
+const { koaJwtSecret } = require('jwks-rsa');
+
+app.use(jwt({ secret: koaJwtSecret({
+                        jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
+                        cache: true,
+                        cacheMaxEntries: 5,
+                        cacheMaxAge: ms('10h'),
                       }),
               audience: 'http://myapi/protected',
               issuer:   'http://issuer' }));
