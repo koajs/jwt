@@ -231,6 +231,52 @@ describe('failure tests', () => {
       .end(done);
   });
 
+
+  it('should throw if deffered provider reject', done => {
+    const validUserResponse = res => res.body.foo !== 'bar' && "Wrong user";
+
+    const secret = 'shhhhhh';
+    const provider = ({alg, kid}) => Promise.reject(new Error("Not supported"));
+    const token = jwt.sign({foo: 'bar'}, secret);
+
+    const app = new Koa();
+
+    app.use(koajwt({ secret: provider, debug: true }));
+    app.use(ctx => {
+      ctx.body = ctx.state.user;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(401)
+      .expect('Invalid token - Not supported\n')
+      .end(done);
+  });
+
+
+  it('should throw if deffered provider return secret do not match jwt token', done => {
+    const validUserResponse = res => res.body.foo !== 'bar' && "Wrong user";
+
+    const secret = 'shhhhhh';
+    const provider = ({alg, kid}) => Promise.resolve("not my secret");
+    const token = jwt.sign({foo: 'bar'}, secret);
+
+    const app = new Koa();
+
+    app.use(koajwt({ secret: provider, debug: true }));
+    app.use(ctx => {
+      ctx.body = ctx.state.user;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(401)
+      .expect('Invalid token - invalid signature\n')
+      .end(done);
+  });
+
 });
 
 describe('passthrough tests', () => {
@@ -385,7 +431,29 @@ describe('success tests', () => {
         .expect(validUserResponse)
         .end(done);
   });
-  
+
+  it('should work if secret is provided by deffered provider', done => {
+    const validUserResponse = res => res.body.foo !== 'bar' && "Wrong user";
+
+    const secret = 'shhhhhh';
+    const provider = ({alg, kid}) => Promise.resolve(secret);
+    const token = jwt.sign({foo: 'bar'}, secret);
+
+    const app = new Koa();
+
+    app.use(koajwt({ secret: provider }));
+    app.use(ctx => {
+      ctx.body = ctx.state.user;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(200)
+      .expect(validUserResponse)
+      .end(done);
+  });
+
   it('should not overwrite ctx.state.token on successful token verification if opts.tokenKey is undefined', done => {
     const validUserResponse = res => res.body.token === "DONT_CLOBBER_ME" && "ctx.state.token not clobbered";
 
