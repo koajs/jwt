@@ -206,7 +206,7 @@ var publicKey = fs.readFileSync('/path/to/public.pub');
 app.use(jwt({ secret: publicKey }));
 ```
 
-If the 'secret' option is a function, this function is called for each JWT received in
+If the `secret` option is a function, this function is called for each JWT received in
 order to determine which secret is used to verify the JWT.
 
 The signature of this function should be (header) => [Promise(secret)], where
