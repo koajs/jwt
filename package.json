@@ -53,6 +53,6 @@
   },
   "scripts": {
     "test": "nyc npm run test-only",
-    "test-only": "mocha --reporter spec --bail test/test.js"
+    "test-only": "mocha --reporter spec test/test.js"
   }
 }
