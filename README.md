@@ -268,6 +268,7 @@ This code is largely based on [express-jwt](https://github.com/auth0/express-jwt
 - [nfantone](https://github.com/nfantone)
 - [scttcper](https://github.com/scttcper)
 - [jhnns](https://github.com/jhnns)
+- [dunnock](https://github.com/dunnock)
 
 
 ## License
