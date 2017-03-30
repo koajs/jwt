@@ -20,8 +20,9 @@
 Koa middleware that validates JSON Web Tokens and sets `ctx.state.user`
 (by default) if a valid token is provided.
 
-If you are using koa v1.x, please use the [master](https://github.com/koajs/jwt) branch and version 1.x of this project on npm.  
-If you are using koa v2, use the [koa-v2](https://github.com/koajs/jwt/tree/koa-v2) branch and version 2.x of this project on npm.
+ * If you are using `koa` version 1, you need to install `koa-jwt@1` from npm. This is the code on the [master](https://github.com/koajs/jwt) branch.
+ * If you are using `koa` version 2+, and you have a version of node < 7.6, install `koa-jwt@2`.
+ * `koa-jwt` version 3+ on the [koa-v2](https://github.com/koajs/jwt/tree/koa-v2) branch uses `async` / `await` and hence requires node >= 7.6.<br>
 
 This module lets you authenticate HTTP requests using JSON Web Tokens
 in your [Koa](http://koajs.com/) (node.js) applications.
