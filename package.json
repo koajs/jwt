@@ -45,6 +45,9 @@
   "engines": {
     "node": ">= 4"
   },
+  "publishConfig": {
+    "tag": "no-async-await"
+  },
   "scripts": {
     "test": "istanbul cover node_modules/mocha/bin/_mocha -- --reporter spec --bail test/test.js",
     "test-only": "mocha --reporter spec --bail test/test.js"
