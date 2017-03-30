@@ -49,6 +49,9 @@
   "engines": {
     "node": ">= 0.12.0"
   },
+  "publishConfig": {
+    "tag": "koa-v1"
+  },
   "scripts": {
     "test": "mocha --reporter spec --bail ./test.js"
   }
