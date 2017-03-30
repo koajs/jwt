@@ -43,7 +43,7 @@
     "supertest": "~2.0.0"
   },
   "engines": {
-    "node": ">= 7.6.0"
+    "node": ">= 4"
   },
   "scripts": {
     "test": "istanbul cover node_modules/mocha/bin/_mocha -- --reporter spec --bail test/test.js",
