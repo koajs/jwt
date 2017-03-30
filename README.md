@@ -1,37 +1,34 @@
-koa-jwt
-=======
+# koa-jwt
 
-[![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
-[![Coveralls][coveralls-image]][coveralls-url]
 [![node version][node-image]][node-url]
 [![npm download][download-image]][download-url]
+[![npm stats][npm-image]][npm-url]
+[![test status][travis-image]][travis-url]
+[![coverage][coveralls-image]][coveralls-url]
 [![license][license-image]][license-url]
 
 [npm-image]: https://img.shields.io/npm/v/koa-jwt.svg?maxAge=2592000&style=flat-square
 [npm-url]: https://npmjs.org/package/koa-jwt
-[travis-image]: https://img.shields.io/travis/koajs/jwt/koa-v2.svg?maxAge=2592000&style=flat-square
+[travis-image]: https://img.shields.io/travis/koajs/jwt/master.svg?maxAge=3600&style=flat-square
 [travis-url]: https://travis-ci.org/koajs/jwt
-[coveralls-image]: https://img.shields.io/coveralls/koajs/jwt/koa-v2.svg?maxAge=2592000&style=flat-square
-[coveralls-url]: https://coveralls.io/r/koajs/jwt?branch=koa-v2
+[coveralls-image]: https://img.shields.io/coveralls/koajs/jwt/master.svg?maxAge=2592000&style=flat-square
+[coveralls-url]: https://coveralls.io/r/koajs/jwt
 [node-image]: https://img.shields.io/node/v/koa-jwt.svg?maxAge=2592000&style=flat-square
 [node-url]: http://nodejs.org/download/
 [download-image]: https://img.shields.io/npm/dm/koa-jwt.svg?maxAge=2592000&style=flat-square
 [download-url]: https://npmjs.org/package/koa-jwt
 [license-image]: https://img.shields.io/npm/l/koa-jwt.svg?maxAge=2592000&style=flat-square
-[license-url]: https://github.com/koajs/jwt/blob/koa-v2/LICENSE
-
-Koa middleware that validates JSON Web Tokens and sets `ctx.state.user`
-(by default) if a valid token is provided.
-
-If you are using koa v1.x, please use the [master](https://github.com/koajs/jwt) branch and version 1.x of this project on npm.  
-If you are using koa v2, use the [koa-v2](https://github.com/koajs/jwt/tree/koa-v2) branch and version 2.x of this project on npm.
+[license-url]: https://github.com/koajs/jwt/blob/master/LICENSE
 
 This module lets you authenticate HTTP requests using JSON Web Tokens
 in your [Koa](http://koajs.com/) (node.js) applications.
 
 See [this article](http://blog.auth0.com/2014/01/07/angularjs-authentication-with-cookies-vs-token/)
 for a good introduction.
+
+ * If you are using `koa` version 2+, and you have a version of node < 7.6, install `koa-jwt@2`.
+ * `koa-jwt` version 3+ on the [master](https://github.com/koajs/jwt) branch uses `async` / `await` and hence requires node >= 7.6.<br>
+ * If you are using `koa` version 1, you need to install `koa-jwt@1` from npm. This is the code on the [koa-v1](https://github.com/koajs/jwt/tree/koa-v1) branch.
 
 
 ## Install
