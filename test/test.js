@@ -16,6 +16,18 @@ describe('failure tests', () => {
     request(app.listen())
       .get('/')
       .expect(401)
+      .expect('Authentication Error')
+      .end(done);
+  });
+
+  it('should throw 401 if no authorization header', done => {
+    const app = new Koa();
+
+    app.use(koajwt({ secret: 'shhhh', debug: true }));
+    request(app.listen())
+      .get('/')
+      .expect(401)
+      .expect('Token not found')
       .end(done);
   });
 
@@ -27,7 +39,7 @@ describe('failure tests', () => {
       .get('/')
       .set('Authorization', 'wrong')
       .expect(401)
-      .expect('Bad Authorization header format. Format is "Authorization: Bearer <token>"\n')
+      .expect('Bad Authorization header format. Format is "Authorization: Bearer <token>"')
       .end(done);
   });
 
@@ -36,11 +48,11 @@ describe('failure tests', () => {
 
     app.use(koajwt({ secret: 'shhhh' }));
     request(app.listen())
-    .get('/')
-    .set('Authorization', 'Bearskin Jacket')
-    .expect(401)
-    .expect('Bad Authorization header format. Format is "Authorization: Bearer <token>"\n')
-    .end(done);
+      .get('/')
+      .set('Authorization', 'Bearskin Jacket')
+      .expect(401)
+      .expect('Bad Authorization header format. Format is "Authorization: Bearer <token>"')
+      .end(done);
   });
 
   it('should allow provided getToken function to throw', done => {
@@ -48,12 +60,12 @@ describe('failure tests', () => {
 
     app.use(koajwt({
       secret: 'shhhh',
-      getToken: ctx => ctx.throw(401, 'Bad Authorization\n')
+      getToken: ctx => ctx.throw(401, 'Bad Authorization')
     }));
     request(app.listen())
       .get('/')
       .expect(401)
-      .expect('Bad Authorization\n')
+      .expect('Bad Authorization')
       .end(done);
   });
 
@@ -62,24 +74,25 @@ describe('failure tests', () => {
 
     app.use(koajwt({
       secret: 'shhhhhh',
-      getToken: () => jwt.sign({foo: 'bar'}, 'bad')
+      getToken: () => jwt.sign({foo: 'bar'}, 'bad'),
+      debug: true
     }));
     request(app.listen())
       .get('/')
       .expect(401)
-      .expect('Invalid token\n')
+      .expect('invalid signature')
       .end(done);
   });
 
   it('should throw if authorization header is not well-formatted jwt', done => {
     const app = new Koa();
 
-    app.use(koajwt({ secret: 'shhhh' }));
+    app.use(koajwt({ secret: 'shhhh', debug: true }));
     request(app.listen())
       .get('/')
       .set('Authorization', 'Bearer wrongjwt')
       .expect(401)
-      .expect('Invalid token\n')
+      .expect('jwt malformed')
       .end(done);
   });
 
@@ -94,7 +107,22 @@ describe('failure tests', () => {
       .get('/')
       .set('Authorization', 'Bearer ' + token)
       .expect(401)
-      .expect('Invalid token - invalid signature\n')
+      .expect('invalid signature')
+      .end(done);
+  });
+
+  it('should throw non-descriptive errors when debug is false', done => {
+    const secret = 'shhhhhh';
+    const token = jwt.sign({foo: 'bar'}, secret);
+
+    const app = new Koa();
+
+    app.use(koajwt({ secret: 'different-shhhh', debug: false }));
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(401)
+      .expect('Authentication Error')
       .end(done);
   });
 
@@ -104,14 +132,14 @@ describe('failure tests', () => {
 
     const app = new Koa();
 
-    app.use(koajwt({ secret: secret, cookie: 'jwt' }));
+    app.use(koajwt({ secret: secret, cookie: 'jwt', debug: true }));
     app.use(ctx => { ctx.body = ctx.state.user; });
 
     request(app.listen())
       .get('/')
       .set('Cookie', 'jwt=bad' + token + ';')
       .expect(401)
-      .expect('Invalid token\n')
+      .expect('invalid token')
       .end(done);
 
   });
@@ -131,7 +159,7 @@ describe('failure tests', () => {
       .get('/')
       .set('Authorization', 'Bearer ' + token)
       .expect(401)
-      .expect('Invalid token - jwt audience invalid. expected: not-expected-audience\n')
+      .expect('jwt audience invalid. expected: not-expected-audience')
       .end(done);
   });
 
@@ -146,7 +174,7 @@ describe('failure tests', () => {
       .get('/')
       .set('Authorization', 'Bearer ' + token)
       .expect(401)
-      .expect('Invalid token - jwt expired\n')
+      .expect('jwt expired')
       .end(done);
   });
 
@@ -161,7 +189,7 @@ describe('failure tests', () => {
       .get('/')
       .set('Authorization', 'Bearer ' + token)
       .expect(401)
-      .expect('Invalid token - jwt issuer invalid. expected: http://wrong\n')
+      .expect('jwt issuer invalid. expected: http://wrong')
       .end(done);
   });
 
@@ -176,7 +204,7 @@ describe('failure tests', () => {
       .get('/')
       .set('Authorization', 'Bearer ' + token)
       .expect(401)
-      .expect('Invalid secret\n')
+      .expect('Secret not provided')
       .end(done);
   });
 
@@ -191,13 +219,13 @@ describe('failure tests', () => {
       .get('/')
       .set('Authorization', 'Bearer ' + token)
       .expect(401)
-      .expect('Invalid token - invalid signature\n')
+      .expect('invalid signature')
       .end(done);
   });
 
   it('should throw 401 if isRevoked throw error', done => {
 
-    const isRevoked = (ctx, token, user) => Promise.reject(new Error('Revoked token'));
+    const isRevoked = (ctx, token, user) => Promise.reject(new Error('Token revocation check error'));
     const secret = 'shhhhhh';
     const token = jwt.sign({foo: 'bar'}, secret);
 
@@ -209,7 +237,7 @@ describe('failure tests', () => {
       .get('/')
       .set('Authorization', 'Bearer ' + token)
       .expect(401)
-      .expect('Invalid token - Revoked token\n')
+      .expect('Token revocation check error')
       .end(done);
   });
 
@@ -227,13 +255,11 @@ describe('failure tests', () => {
       .get('/')
       .set('Authorization', 'Bearer ' + token)
       .expect(401)
-      .expect('Invalid token - Revoked token\n')
+      .expect('Token revoked')
       .end(done);
   });
 
-
-  it('should throw if deffered provider reject', done => {
-    const validUserResponse = res => res.body.foo !== 'bar' && "Wrong user";
+  it('should throw if secret provider rejects', done => {
 
     const secret = 'shhhhhh';
     const provider = ({alg, kid}) => Promise.reject(new Error("Not supported"));
@@ -250,13 +276,32 @@ describe('failure tests', () => {
       .get('/')
       .set('Authorization', 'Bearer ' + token)
       .expect(401)
-      .expect('Invalid token - Not supported\n')
+      .expect('Not supported')
       .end(done);
   });
 
+  it('should throw if secret provider used but token invalid', done => {
 
-  it('should throw if deffered provider return secret do not match jwt token', done => {
-    const validUserResponse = res => res.body.foo !== 'bar' && "Wrong user";
+    const secret = 'shhhhhh';
+    const provider = ({ alg, kid }) => Promise.resolve('a nice secret');
+    const token = jwt.sign({ foo: 'bar' }, secret);
+
+    const app = new Koa();
+
+    app.use(koajwt({ secret: provider, debug: true }));
+    app.use(ctx => {
+      ctx.body = ctx.state.user;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer dodgytoken')
+      .expect(401)
+      .expect('Invalid token')
+      .end(done);
+  });
+
+  it('should throw if secret provider returns a secret that does not match jwt', done => {
 
     const secret = 'shhhhhh';
     const provider = ({alg, kid}) => Promise.resolve("not my secret");
@@ -273,7 +318,7 @@ describe('failure tests', () => {
       .get('/')
       .set('Authorization', 'Bearer ' + token)
       .expect(401)
-      .expect('Invalid token - invalid signature\n')
+      .expect('invalid signature')
       .end(done);
   });
 
@@ -290,6 +335,22 @@ describe('passthrough tests', () => {
 
     request(app.listen())
       .get('/')
+      .expect(204) // No content
+      .expect('')
+      .end(done);
+  });
+
+  it('should continue if `passthrough` is true with bad auth header format', done => {
+    const app = new Koa();
+
+    app.use(koajwt({ secret: 'shhhhhh', passthrough: true, debug: true }));
+    app.use(ctx => {
+      ctx.body = ctx.state.user;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'liver and onions')
       .expect(204) // No content
       .expect('')
       .end(done);
@@ -318,7 +379,6 @@ describe('success tests', () => {
       .expect(200)
       .expect(validUserResponse)
       .end(done);
-
   });
 
   it('should work if the provided getToken function returns a valid jwt', done => {
@@ -345,10 +405,10 @@ describe('success tests', () => {
 
     const secret = 'shhhhhh';
     const token = jwt.sign({foo: 'bar'}, secret);
-
     const invalidToken = jwt.sign({foo: 'bar'}, 'badSecret');
 
     const app = new Koa();
+
     app.use(koajwt({ secret: secret, cookie: 'jwt'}));
     app.use(ctx => {
       ctx.body = ctx.state.user;
@@ -432,11 +492,11 @@ describe('success tests', () => {
         .end(done);
   });
 
-  it('should work if secret is provided by deffered provider', done => {
+  it('should work if secret is provided by secret provider function', done => {
     const validUserResponse = res => res.body.foo !== 'bar' && "Wrong user";
 
     const secret = 'shhhhhh';
-    const provider = ({alg, kid}) => Promise.resolve(secret);
+    const provider = ({ alg, kid }) => Promise.resolve(secret);
     const token = jwt.sign({foo: 'bar'}, secret);
 
     const app = new Koa();
@@ -498,8 +558,7 @@ describe('success tests', () => {
       .expect(200)
       .expect(validUserResponse)
       .end(done);
-    });
-
+  });
 
   it('should use middleware secret if both middleware and options provided', done => {
     const validUserResponse = res => res.body.foo !== 'bar' && "Wrong user";
@@ -563,7 +622,7 @@ describe('unless tests', () => {
       .get('/private')
       .set('Authorization', 'wrong')
       .expect(401)
-      .expect('Bad Authorization header format. Format is "Authorization: Bearer <token>"\n')
+      .expect('Bad Authorization header format. Format is "Authorization: Bearer <token>"')
       .end(done);
   });
 
@@ -586,7 +645,6 @@ describe('unless tests', () => {
       .expect(200)
       .expect(validUserResponse)
       .end(done);
-
   });
 
   it('should work if authorization header is valid jwt and is not revoked', done => {
@@ -610,7 +668,5 @@ describe('unless tests', () => {
       .expect(200)
       .expect(validUserResponse)
       .end(done);
-
   });
-
 });
