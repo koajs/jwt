@@ -10,7 +10,7 @@
 [travis-url]: https://travis-ci.org/koajs/jwt
 [coveralls-image]: https://img.shields.io/coveralls/koajs/jwt/koa-v2.svg?maxAge=2592000&style=flat-square
 [coveralls-url]: https://coveralls.io/r/koajs/jwt?branch=koa-v2
-[node-image]: https://img.shields.io/node/v/koa-jwt.svg?maxAge=2592000&style=flat-square
+[node-image]: https://img.shields.io/badge/node-v4%2B-green.svg?maxAge=2592000&style=flat-square
 [node-url]: http://nodejs.org/download/
 [download-image]: https://img.shields.io/npm/dm/koa-jwt.svg?maxAge=2592000&style=flat-square
 [download-url]: https://npmjs.org/package/koa-jwt
