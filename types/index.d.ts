@@ -19,7 +19,7 @@ declare namespace jwt {
         debug?: boolean;
     }
 
-    interface Middleware extends Koa.Middleware {
+    export interface Middleware extends Koa.Middleware {
         unless(params?: any): any;
     }
 }
