@@ -90,7 +90,7 @@ match the following interface:
  * @param  {object}      ctx The ctx object passed to the middleware
  * @param  {object}      token token The token
  * @param  {object}      user Content of the token
- * @return {Promise}     If the token is not revoked, the promise must resolve with false, otherwise (the promise resolve with false or error) the token is revoked
+ * @return {Promise}     If the token is not revoked, the promise must resolve with false, otherwise (the promise resolve with true or error) the token is revoked
  */
 ```
 
@@ -259,7 +259,7 @@ This code is largely based on [express-jwt](https://github.com/auth0/express-jwt
 - [getuliojr](https://github.com/getuliojr)
 - [cesarandreu](https://github.com/cesarandreu)
 - [michaelwestphal](https://github.com/michaelwestphal)
-- [sc0ttyd](https://github.com/sc0ttyd)
+- [sdd](https://github.com/sdd)
 - [Jackong](https://github.com/Jackong)
 - [danwkennedy](https://github.com/danwkennedy)
 - [nfantone](https://github.com/nfantone)
