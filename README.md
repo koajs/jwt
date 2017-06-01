@@ -23,8 +23,7 @@
 This module lets you authenticate HTTP requests using JSON Web Tokens
 in your [Koa](http://koajs.com/) (node.js) applications.
 
-See [this article](http://blog.auth0.com/2014/01/07/angularjs-authentication-with-cookies-vs-token/)
-for a good introduction.
+See [this article](http://blog.auth0.com/2014/01/07/angularjs-authentication-with-cookies-vs-token/) (Angular) or [this one](https://medium.com/@leo/why-json-web-tokens-are-truly-awesome-23fb80b7fc20#.w47xi19k1) (Ember) for a good introduction.
 
  * If you are using `koa` version 2+, and you have a version of node < 7.6, install `koa-jwt@2`.
  * `koa-jwt` version 3+ on the [master](https://github.com/koajs/jwt) branch uses `async` / `await` and hence requires node >= 7.6.<br>
