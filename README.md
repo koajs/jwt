@@ -88,8 +88,8 @@ match the following interface:
  * Your custom isRevoked resolver
  *
  * @param  {object}      ctx The ctx object passed to the middleware
+ * @param  {object}      decodedToken Content of the token
  * @param  {object}      token token The token
- * @param  {object}      user Content of the token
  * @return {Promise}     If the token is not revoked, the promise must resolve with false, otherwise (the promise resolve with true or error) the token is revoked
  */
 ```
