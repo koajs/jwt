@@ -6,6 +6,7 @@ const request = require('supertest');
 const assert  = require('assert');
 const jwt     = require('jsonwebtoken');
 const koajwt  = require('../lib');
+const expect  = require('chai').expect;
 
 describe('failure tests', () => {
 
@@ -170,6 +171,28 @@ describe('failure tests', () => {
     const app = new Koa();
     app.use(koajwt({ secret: 'shhhhhh', debug: true }));
 
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(401)
+      .expect('jwt expired')
+      .end(done);
+  });
+
+  it('should throw with original jsonwebtoken error as originalError property', done => {
+    const secret = 'shhhhhh';
+    const token = jwt.sign({foo: 'bar', exp: 1382412921 }, secret);
+
+    const app = new Koa();
+    // Custom 401 handling
+    app.use((ctx, next) => {
+      return next().catch(err => {
+        expect(err).to.have.property('originalError');
+        expect(err.originalError.message).to.equal('jwt expired');
+        throw err;
+      });
+    });
+    app.use(koajwt({ secret: 'shhhhhh', debug: true }));
     request(app.listen())
       .get('/')
       .set('Authorization', 'Bearer ' + token)
