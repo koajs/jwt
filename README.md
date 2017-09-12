@@ -20,21 +20,41 @@
 [license-image]: https://img.shields.io/npm/l/koa-jwt.svg?maxAge=2592000&style=flat-square
 [license-url]: https://github.com/koajs/jwt/blob/master/LICENSE
 
+## Table of Contents
+
+- [koa-jwt](#koa-jwt)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Install](#install)
+  - [Usage](#usage)
+    - [Retrieving the token](#retrieving-the-token)
+    - [Passing the secret](#passing-the-secret)
+    - [Checking if the token is revoked](#checking-if-the-token-is-revoked)
+  - [Example](#example)
+  - [Token Verification Exceptions](#token-verification-exceptions)
+  - [Related Modules](#related-modules)
+  - [Tests](#tests)
+  - [Author](#author)
+  - [Credits](#credits)
+  - [Contributors](#contributors)
+  - [License](#license)
+
+## Introduction
+
 This module lets you authenticate HTTP requests using JSON Web Tokens
 in your [Koa](http://koajs.com/) (node.js) applications.
 
 See [this article](http://blog.auth0.com/2014/01/07/angularjs-authentication-with-cookies-vs-token/)
 for a good introduction.
 
- * If you are using `koa` version 2+, and you have a version of node < 7.6, install `koa-jwt@2`.
- * `koa-jwt` version 3+ on the [master](https://github.com/koajs/jwt) branch uses `async` / `await` and hence requires node >= 7.6.<br>
- * If you are using `koa` version 1, you need to install `koa-jwt@1` from npm. This is the code on the [koa-v1](https://github.com/koajs/jwt/tree/koa-v1) branch.
-
+* If you are using `koa` version 2+, and you have a version of node < 7.6, install `koa-jwt@2`.
+* `koa-jwt` version 3+ on the [master](https://github.com/koajs/jwt) branch uses `async` / `await` and hence requires node >= 7.6.
+* If you are using `koa` version 1, you need to install `koa-jwt@1` from npm. This is the code on the [koa-v1](https://github.com/koajs/jwt/tree/koa-v1) branch.
 
 ## Install
 
-```
-$ npm install koa-jwt
+```bash
+npm install koa-jwt
 ```
 
 ## Usage
@@ -43,7 +63,6 @@ The JWT authentication middleware authenticates callers using a JWT
 token. If the token is valid, `ctx.state.user` (by default) will be set
 with the JSON object decoded to be used by later middleware for
 authorization and access control.
-
 
 ### Retrieving the token
 
@@ -64,10 +83,10 @@ should match the following interface:
 ```
 
 The resolution order for the token is the following. The first non-empty token resolved will be the one that is verified.
- - `opts.getToken` function
- - check the cookies (if `opts.cookie` is set)
- - check the Authorization header for a bearer token
 
+* `opts.getToken` function
+* check the cookies (if `opts.cookie` is set)
+* check the Authorization header for a bearer token
 
 ### Passing the secret
 
@@ -75,7 +94,6 @@ Normally you provide a single shared secret in `opts.secret`, but another
 alternative is to have an earlier middleware set `ctx.state.secret`,
 typically per request. If this property exists, it will be used instead
 of the one in `opts.secret`.
-
 
 ### Checking if the token is revoked
 
@@ -93,7 +111,6 @@ match the following interface:
  * @return {Promise}     If the token is not revoked, the promise must resolve with false, otherwise (the promise resolve with true or error) the token is revoked
  */
 ```
-
 
 ## Example
 
@@ -172,25 +189,52 @@ For more information on `unless` exceptions, check [koa-unless](https://github.c
 
 You can also add the `passthrough` option to always yield next,
 even if no valid Authorization header was found:
+
 ```js
 app.use(jwt({ secret: 'shared-secret', passthrough: true }));
 ```
+
 This lets downstream middleware make decisions based on whether `ctx.state.user` is set.
 
-
 If you prefer to use another ctx key for the decoded data, just pass in `key`, like so:
+
 ```js
 app.use(jwt({ secret: 'shared-secret', key: 'jwtdata' }));
 ```
+
 This makes the decoded data available as `ctx.state.jwtdata`.
 
 You can specify audience and/or issuer as well:
+
 ```js
 app.use(jwt({ secret:   'shared-secret',
               audience: 'http://myapi/protected',
               issuer:   'http://issuer' }));
 ```
+
+## Token Verification Exceptions
+
 If the JWT has an expiration (`exp`), it will be checked.
+
+All error codes for token verification can be found at: [https://github.com/auth0/node-jsonwebtoken#errors--codes](https://github.com/auth0/node-jsonwebtoken#errors--codes).
+
+Notifying a client of error codes (e.g token expiration) can be achieved by sending the `err.originalError.message` error code to the client.
+
+```js
+// Custom 401 handling (first middleware)
+app.use(function (ctx, next) {
+  return next().catch((err) => {
+    if (err.status === 401) {
+      ctx.status = 401;
+      ctx.body = {
+        error: err.originalError ? err.originalError.message : err.message
+      };
+    } else {
+      throw err;
+    }
+  });
+});
+```
 
 If the `tokenKey` option is present, and a valid token is found, the original raw token
 is made available to subsequent middleware as `ctx.state[opts.tokenKey]`.
@@ -212,6 +256,7 @@ The signature of this function should be `(header) => [Promise(secret)]`, where
 
 This option can be used to support JWKS (JSON Web Key Set) providers by using
 [node-jwks-rsa](https://github.com/auth0/node-jwks-rsa). For example:
+
 ```js
 const { koaJwtSecret } = require('jwks-rsa');
 
@@ -224,49 +269,45 @@ app.use(jwt({ secret: koaJwtSecret({
               issuer:   'http://issuer' }));
 ```
 
-
 ## Related Modules
 
-- [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) — JSON Web Token signing
-and verification
+* [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) — JSON Web Token signing and verification
 
 Note that koa-jwt no longer exports the `sign`, `verify` and `decode` functions from `jsonwebtoken` in the koa-v2 branch.
 
-
 ## Tests
 
-    $ npm install
-    $ npm test
-
+```bash
+npm install
+npm test
+```
 
 ## Author
 
 Stian Grytøyr
 
-
 ## Credits
 
 This code is largely based on [express-jwt](https://github.com/auth0/express-jwt).
 
-  - [Auth0](http://auth0.com/)
-  - [Matias Woloski](http://github.com/woloski)
-
+* [Auth0](http://auth0.com/)
+* [Matias Woloski](http://github.com/woloski)
 
 ## Contributors
-- [Foxandxss](https://github.com/Foxandxss)
-- [soygul](https://github.com/soygul)
-- [tunnckoCore](https://github.com/tunnckoCore)
-- [getuliojr](https://github.com/getuliojr)
-- [cesarandreu](https://github.com/cesarandreu)
-- [michaelwestphal](https://github.com/michaelwestphal)
-- [sdd](https://github.com/sdd)
-- [Jackong](https://github.com/Jackong)
-- [danwkennedy](https://github.com/danwkennedy)
-- [nfantone](https://github.com/nfantone)
-- [scttcper](https://github.com/scttcper)
-- [jhnns](https://github.com/jhnns)
-- [dunnock](https://github.com/dunnock)
 
+* [Foxandxss](https://github.com/Foxandxss)
+* [soygul](https://github.com/soygul)
+* [tunnckoCore](https://github.com/tunnckoCore)
+* [getuliojr](https://github.com/getuliojr)
+* [cesarandreu](https://github.com/cesarandreu)
+* [michaelwestphal](https://github.com/michaelwestphal)
+* [sdd](https://github.com/sdd)
+* [Jackong](https://github.com/Jackong)
+* [danwkennedy](https://github.com/danwkennedy)
+* [nfantone](https://github.com/nfantone)
+* [scttcper](https://github.com/scttcper)
+* [jhnns](https://github.com/jhnns)
+* [dunnock](https://github.com/dunnock)
 
 ## License
 
