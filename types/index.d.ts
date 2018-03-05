@@ -17,6 +17,9 @@ declare namespace jwt {
         passthrough?: boolean;
         cookie?: string;
         debug?: boolean;
+        audience?: string;
+        issuer?: string;
+        algorithms?: string[];
     }
 
     export interface Middleware extends Koa.Middleware {
