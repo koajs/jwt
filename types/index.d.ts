@@ -3,7 +3,7 @@
 // Definitions by: Bruno Krebs <https://github.com/brunokrebs/>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
-import Koa = require("koa");
+import Koa = require('koa');
 
 export = jwt;
 
@@ -14,6 +14,7 @@ declare namespace jwt {
         secret: string | Buffer;
         key?: string;
         getToken?(opts: jwt.Options): string;
+        isRevoked?(ctx: Koa.Context, decodedToken: object, token: string): Promise<boolean>;
         passthrough?: boolean;
         cookie?: string;
         debug?: boolean;
