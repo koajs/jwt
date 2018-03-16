@@ -3,7 +3,7 @@
 // Definitions by: Bruno Krebs <https://github.com/brunokrebs/>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
-import Koa = require('koa');
+import * as Koa from 'koa';
 
 export = jwt;
 
@@ -11,7 +11,7 @@ declare function jwt(options: jwt.Options): jwt.Middleware;
 
 declare namespace jwt {
     export interface Options {
-        secret: string | Buffer;
+        secret: (header?: object, payload?: string) => Promise<string | Buffer> | string | Buffer;
         key?: string;
         tokenKey?: string;
         getToken?(opts: jwt.Options): string;
