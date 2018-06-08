@@ -260,13 +260,16 @@ This option can be used to support JWKS (JSON Web Key Set) providers by using
 ```js
 const { koaJwtSecret } = require('jwks-rsa');
 
-app.use(jwt({ secret: koaJwtSecret({
-                        jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
-                        cache: true,
-                        cacheMaxEntries: 5,
-                        cacheMaxAge: ms('10h') }),
-              audience: 'http://myapi/protected',
-              issuer:   'http://issuer' }));
+app.use(jwt({ 
+  secret: koaJwtSecret({
+    jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
+    cache: true,
+    cacheMaxEntries: 5,
+    cacheMaxAge: ms('10h') 
+  }),
+  audience: 'http://myapi/protected',
+  issuer: 'http://issuer' 
+}));
 ```
 
 ## Related Modules
@@ -282,13 +285,14 @@ npm install
 npm test
 ```
 
-## Author
+## Authors/Maintainers
 
-Stian Grytøyr
+* [Stian Grytøyr](https://github.com/stiang) (initial author)
+* [Scott Donnely](https://github.com/sdd) (current maintainer)
 
 ## Credits
 
-This code is largely based on [express-jwt](https://github.com/auth0/express-jwt).
+The initial code was largely based on [express-jwt](https://github.com/auth0/express-jwt).
 
 * [Auth0](http://auth0.com/)
 * [Matias Woloski](http://github.com/woloski)
@@ -301,7 +305,6 @@ This code is largely based on [express-jwt](https://github.com/auth0/express-jwt
 * [getuliojr](https://github.com/getuliojr)
 * [cesarandreu](https://github.com/cesarandreu)
 * [michaelwestphal](https://github.com/michaelwestphal)
-* [sdd](https://github.com/sdd)
 * [Jackong](https://github.com/Jackong)
 * [danwkennedy](https://github.com/danwkennedy)
 * [nfantone](https://github.com/nfantone)
