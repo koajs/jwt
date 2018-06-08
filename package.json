@@ -44,11 +44,13 @@
     "koa-unless": "1.0.0"
   },
   "devDependencies": {
+    "@types/koa": "^2.0.44",
+    "chai": "latest",
     "koa": "^2.0.1",
     "mocha": "3.2.0",
-    "chai": "latest",
     "nyc": "10.1.2",
-    "supertest": "3.0.0"
+    "supertest": "3.0.0",
+    "ts-node": "^5.0.1"
   },
   "engines": {
     "node": ">= 7.6.0"
