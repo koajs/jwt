@@ -212,7 +212,7 @@ app.use(jwt({ secret:   'shared-secret',
               issuer:   'http://issuer' }));
 ```
 
-You can specify a number of secrets in an array.
+You can specify an array of secrets.
 
 The token will be considered valid if it validates successfully against _any_ of the supplied secrets.
 This allows for rolling shared secrets, for example:
