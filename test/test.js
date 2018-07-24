@@ -112,6 +112,21 @@ describe('failure tests', () => {
       .end(done);
   });
 
+  it('should throw if authorization header is not valid jwt according to any secret', done => {
+    const secret = 'shhhhhh';
+    const token = jwt.sign({foo: 'bar'}, secret);
+
+    const app = new Koa();
+
+    app.use(koajwt({ secret: ['different-shhhh', 'some-other-shhhhh'], debug: true }));
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(401)
+      .expect('invalid signature')
+      .end(done);
+  });
+
   it('should throw non-descriptive errors when debug is false', done => {
     const secret = 'shhhhhh';
     const token = jwt.sign({foo: 'bar'}, secret);
@@ -345,6 +360,29 @@ describe('failure tests', () => {
       .end(done);
   });
 
+  it('should throw if no secret provider returns a secret that matches jwt', done => {
+
+    const secret = 'shhhhhh';
+    const providers = [
+      ({alg, kid}) => Promise.resolve("not my secret"),
+      ({alg, kid}) => Promise.resolve("still not my secret"),
+    ];
+    const token = jwt.sign({foo: 'bar'}, secret);
+
+    const app = new Koa();
+
+    app.use(koajwt({ secret: providers, debug: true }));
+    app.use(ctx => {
+      ctx.body = ctx.state.user;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(401)
+      .expect('invalid signature')
+      .end(done);
+  });
 });
 
 describe('passthrough tests', () => {
@@ -392,6 +430,27 @@ describe('success tests', () => {
     const app = new Koa();
 
     app.use(koajwt({ secret: secret }));
+    app.use(ctx => {
+      ctx.body = ctx.state.user;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(200)
+      .expect(validUserResponse)
+      .end(done);
+  });
+
+  it('should work if authorization header is valid jwt according to one of the secrets', done => {
+    const validUserResponse = res => res.body.foo !== 'bar' && "Wrong user";
+
+    const secret = 'shhhhhh';
+    const token = jwt.sign({foo: 'bar'}, secret);
+
+    const app = new Koa();
+
+    app.use(koajwt({ secret: [secret, 'another secret'] }));
     app.use(ctx => {
       ctx.body = ctx.state.user;
     });
@@ -525,6 +584,31 @@ describe('success tests', () => {
     const app = new Koa();
 
     app.use(koajwt({ secret: provider }));
+    app.use(ctx => {
+      ctx.body = ctx.state.user;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(200)
+      .expect(validUserResponse)
+      .end(done);
+  });
+
+  it('should work if a valid secret is provided by one of the secret provider functions', done => {
+    const validUserResponse = res => res.body.foo !== 'bar' && "Wrong user";
+
+    const secret = 'shhhhhh';
+    const providers = [
+      ({ alg, kid }) => Promise.resolve(secret),
+      ({ alg, kid }) => Promise.resolve('other-shhhh'),
+    ];
+    const token = jwt.sign({foo: 'bar'}, secret);
+
+    const app = new Koa();
+
+    app.use(koajwt({ secret: providers }));
     app.use(ctx => {
       ctx.body = ctx.state.user;
     });

@@ -90,10 +90,10 @@ The resolution order for the token is the following. The first non-empty token r
 
 ### Passing the secret
 
-Normally you provide a single shared secret in `opts.secret`, but another
+One can provide a single secret, or array of secrets in `opts.secret`. An
 alternative is to have an earlier middleware set `ctx.state.secret`,
 typically per request. If this property exists, it will be used instead
-of the one in `opts.secret`.
+of `opts.secret`.
 
 ### Checking if the token is revoked
 
@@ -210,6 +210,15 @@ You can specify audience and/or issuer as well:
 app.use(jwt({ secret:   'shared-secret',
               audience: 'http://myapi/protected',
               issuer:   'http://issuer' }));
+```
+
+You can specify a number of secrets in an array.
+
+The token will be considered valid if it validates successfully against _any_ of the supplied secrets.
+This allows for rolling shared secrets, for example:
+
+```js
+app.use(jwt({ secret: ['old-shared-secret', 'new-shared-secret'] }));
 ```
 
 ## Token Verification Exceptions

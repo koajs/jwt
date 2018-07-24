@@ -40,13 +40,14 @@
     "report-dir": "./coverage"
   },
   "dependencies": {
+    "bluebird": "^3.5.1",
     "jsonwebtoken": "8.0.0",
     "koa-unless": "1.0.0"
   },
   "devDependencies": {
+    "chai": "latest",
     "koa": "^2.0.1",
     "mocha": "3.2.0",
-    "chai": "latest",
     "nyc": "10.1.2",
     "supertest": "3.0.0"
   },
