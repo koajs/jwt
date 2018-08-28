@@ -11,7 +11,7 @@ declare function jwt(options: jwt.Options): jwt.Middleware;
 
 declare namespace jwt {
     export interface Options {
-        secret: string | Buffer;
+        secret: string | Buffer | SecretLoader;
         key?: string;
         tokenKey?: string;
         getToken?(opts: jwt.Options): string;
@@ -23,6 +23,8 @@ declare namespace jwt {
         issuer?: string;
         algorithms?: string[];
     }
+
+    export type SecretLoader = (header: any, payload: any) => Promise<string | Buffer>;
 
     export interface Middleware extends Koa.Middleware {
         unless(params?: any): any;
