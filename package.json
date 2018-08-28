@@ -1,6 +1,6 @@
 {
   "name": "koa-jwt",
-  "version": "3.3.2",
+  "version": "3.4.0",
   "description": "Koa JWT authentication middleware.",
   "types": "types/index.d.ts",
   "keywords": [
