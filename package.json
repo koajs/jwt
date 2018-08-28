@@ -40,8 +40,8 @@
     "report-dir": "./coverage"
   },
   "dependencies": {
-    "jsonwebtoken": "8.0.0",
-    "koa-unless": "1.0.0"
+    "jsonwebtoken": "8.3.0",
+    "koa-unless": "1.0.7"
   },
   "devDependencies": {
     "koa": "^2.0.1",
