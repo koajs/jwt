@@ -297,7 +297,7 @@ npm test
 ## Authors/Maintainers
 
 * [Stian Grytøyr](https://github.com/stiang) (initial author)
-* [Scott Donnely](https://github.com/sdd) (current maintainer)
+* [Scott Donnelly](https://github.com/sdd) (current maintainer)
 
 ## Credits
 
