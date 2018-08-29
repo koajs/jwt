@@ -1,12 +1,14 @@
 'use strict';
-const TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIiLCJpYXQiOjE0MjY1NDY5MTl9.ETgkTn8BaxIX4YqvUWVFPmum3moNZ7oARZtSBXb_vP4';
-
 const Koa     = require('koa');
 const request = require('supertest');
-const assert  = require('assert');
+const chai    = require('chai');
+const sinon   = require('sinon');
+var sinonChai = require("sinon-chai");
 const jwt     = require('jsonwebtoken');
 const koajwt  = require('../lib');
-const expect  = require('chai').expect;
+
+chai.use(sinonChai);
+const expect  = chai.expect;
 
 describe('failure tests', () => {
 
@@ -380,6 +382,27 @@ describe('failure tests', () => {
       .expect('invalid signature')
       .end(done);
   });
+
+  it('should call the onError handler if there is a problem', done => {
+      const isRevoked = (ctx, token, user) => Promise.resolve(true);
+      const secret = 'shhhhhh';
+      const token = jwt.sign({foo: 'bar'}, secret);
+      const handler = sinon.spy();
+
+      const app = new Koa();
+
+      app.use(koajwt({ secret: secret, isRevoked, debug: true, onError: handler}));
+
+      request(app.listen())
+          .get('/')
+          .set('Authorization', 'Bearer ' + token)
+          .expect(401)
+          .expect('Token revoked')
+          .end((...args) => {
+            expect(handler).to.have.been.called;
+            done(...args);
+          });
+  });
 });
 
 describe('passthrough tests', () => {
@@ -396,6 +419,25 @@ describe('passthrough tests', () => {
       .expect(204) // No content
       .expect('')
       .end(done);
+  });
+
+  it('should call onError even if `passthrough` is true', done => {
+      const app = new Koa();
+      const handler = sinon.spy();
+
+      app.use(koajwt({ secret: 'shhhhhh', passthrough: true, debug: true, onError: handler}));
+      app.use(ctx => {
+          ctx.body = ctx.state.user;
+      });
+
+      request(app.listen())
+          .get('/')
+          .expect(204) // No content
+          .expect('')
+          .end((...args) => {
+              expect(handler).to.have.been.called;
+              done(...args);
+          });
   });
 
   it('should continue if `passthrough` is true with bad auth header format', done => {
