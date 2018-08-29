@@ -363,15 +363,12 @@ describe('failure tests', () => {
   it('should throw if no secret provider returns a secret that matches jwt', done => {
 
     const secret = 'shhhhhh';
-    const providers = [
-      ({alg, kid}) => Promise.resolve("not my secret"),
-      ({alg, kid}) => Promise.resolve("still not my secret"),
-    ];
+    const provider = ({alg, kid}) => Promise.resolve(["not my secret", "still not my secret"])
     const token = jwt.sign({foo: 'bar'}, secret);
 
     const app = new Koa();
 
-    app.use(koajwt({ secret: providers, debug: true }));
+    app.use(koajwt({ secret: provider, debug: true }));
     app.use(ctx => {
       ctx.body = ctx.state.user;
     });
@@ -600,15 +597,12 @@ describe('success tests', () => {
     const validUserResponse = res => res.body.foo !== 'bar' && "Wrong user";
 
     const secret = 'shhhhhh';
-    const providers = [
-      ({ alg, kid }) => Promise.resolve(secret),
-      ({ alg, kid }) => Promise.resolve('other-shhhh'),
-    ];
+    const provider = ({ alg, kid }) => Promise.resolve(['other-shhhh', secret]);
     const token = jwt.sign({foo: 'bar'}, secret);
 
     const app = new Koa();
 
-    app.use(koajwt({ secret: providers }));
+    app.use(koajwt({ secret: provider }));
     app.use(ctx => {
       ctx.body = ctx.state.user;
     });
