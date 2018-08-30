@@ -11,7 +11,7 @@ declare function jwt(options: jwt.Options): jwt.Middleware;
 
 declare namespace jwt {
     export interface Options {
-        secret: string | Buffer | SecretLoader;
+        secret: string | string[] | Buffer | SecretLoader;
         key?: string;
         tokenKey?: string;
         getToken?(ctx: Koa.Context, opts: jwt.Options): string;
