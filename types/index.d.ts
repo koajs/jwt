@@ -16,6 +16,7 @@ declare namespace jwt {
         tokenKey?: string;
         getToken?(ctx: Koa.Context, opts: jwt.Options): string;
         isRevoked?(ctx: Koa.Context, decodedToken: object, token: string): Promise<boolean>;
+        onError?(error: Error, ctx: Koa.Context): void;
         passthrough?: boolean;
         cookie?: string;
         debug?: boolean;

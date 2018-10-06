@@ -187,6 +187,19 @@ app.listen(3000);
 
 For more information on `unless` exceptions, check [koa-unless](https://github.com/Foxandxss/koa-unless).
 
+If you want to do something with authentication errors within this piece of middleware,
+you can add the `onError` option. This should be a function that accepts
+and `Error` object and the Koa context.
+
+```js
+app.use(jwt({
+    secret: 'shared-secret',
+    onError: (error, ctx) => {
+        ctx.state.authError = error.message;
+    }
+}));
+```
+
 You can also add the `passthrough` option to always yield next,
 even if no valid Authorization header was found:
 
@@ -269,15 +282,15 @@ This option can be used to support JWKS (JSON Web Key Set) providers by using
 ```js
 const { koaJwtSecret } = require('jwks-rsa');
 
-app.use(jwt({ 
+app.use(jwt({
   secret: koaJwtSecret({
     jwksUri: 'https://sandrino.auth0.com/.well-known/jwks.json',
     cache: true,
     cacheMaxEntries: 5,
-    cacheMaxAge: ms('10h') 
+    cacheMaxAge: ms('10h')
   }),
   audience: 'http://myapi/protected',
-  issuer: 'http://issuer' 
+  issuer: 'http://issuer'
 }));
 ```
 
