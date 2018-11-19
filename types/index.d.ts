@@ -27,6 +27,6 @@ declare namespace jwt {
     export type SecretLoader = (header: any, payload: any) => Promise<string | string[] | Buffer | Buffer[]>;
 
     export interface Middleware extends Koa.Middleware {
-        unless(params?: any): any;
+        unless(params?: { path: RegExp[] }): Koa.Middleware;
     }
 }
