@@ -19,7 +19,7 @@ declare namespace jwt {
         passthrough?: boolean;
         cookie?: string;
         debug?: boolean;
-        audience?: string;
+        audience?: string | string[];
         issuer?: string;
         algorithms?: string[];
     }
