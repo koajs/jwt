@@ -194,7 +194,7 @@ even if no valid Authorization header was found:
 app.use(jwt({ secret: 'shared-secret', passthrough: true }));
 ```
 
-This lets downstream middleware make decisions based on whether `ctx.state.user` is set. You can still handle errors using  `ctx.state.jwtOriginalError`
+This lets downstream middleware make decisions based on whether `ctx.state.user` is set. You can still handle errors using  `ctx.state.jwtOriginalError`.
 
 If you prefer to use another ctx key for the decoded data, just pass in `key`, like so:
 
