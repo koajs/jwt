@@ -194,7 +194,7 @@ even if no valid Authorization header was found:
 app.use(jwt({ secret: 'shared-secret', passthrough: true }));
 ```
 
-This lets downstream middleware make decisions based on whether `ctx.state.user` is set.
+This lets downstream middleware make decisions based on whether `ctx.state.user` is set. You can still handle errors using  `ctx.state.jwtOriginalError`.
 
 If you prefer to use another ctx key for the decoded data, just pass in `key`, like so:
 
@@ -227,7 +227,7 @@ If the JWT has an expiration (`exp`), it will be checked.
 
 All error codes for token verification can be found at: [https://github.com/auth0/node-jsonwebtoken#errors--codes](https://github.com/auth0/node-jsonwebtoken#errors--codes).
 
-Notifying a client of error codes (e.g token expiration) can be achieved by sending the `err.originalError.message` error code to the client.
+Notifying a client of error codes (e.g token expiration) can be achieved by sending the `err.originalError.message` error code to the client. If passthrough is enabled use `ctx.state.jwtOriginalError`.
 
 ```js
 // Custom 401 handling (first middleware)
