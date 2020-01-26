@@ -2,6 +2,7 @@
   "name": "koa-jwt",
   "version": "3.5.1",
   "description": "Koa JWT authentication middleware.",
+  "main": "./lib",
   "types": "types/index.d.ts",
   "keywords": [
     "auth",
@@ -21,17 +22,80 @@
     "type": "git",
     "url": "git://github.com/koajs/jwt.git"
   },
-  "bugs": {
-    "url": "https://github.com/koajs/jwt/issues"
-  },
-  "homepage": "https://github.com/koajs/jwt",
-  "author": {
-    "name": "Stian Grytøyr",
-    "email": "stian@grytoyr.net",
-    "url": "http://stian.grytoyr.net/"
-  },
   "license": "MIT",
-  "main": "./lib",
+  "authors": [
+    {
+      "name": "Stian Grytøyr",
+      "email": "stian@grytoyr.net",
+      "url": "http://stian.grytoyr.net/"
+    },
+    {
+      "name": "Scott Donnelly",
+      "url": "http://scott.donnel.ly/"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Jesús Rodríguez",
+      "email": "Foxandxss@gmail.com",
+      "url": "http://angular-tips.com/"
+    },
+    {
+      "name": "Teoman Soygul",
+      "url": "http://soygul.com"
+    },
+    {
+      "name": "Charlike Mike Reagent",
+      "email": "hello@tunnckocore.com",
+      "url": "https://tunnckoCore.com"
+    },
+    {
+      "name": "Getulio Romão Campos Junior",
+      "email": "gromao@gmail.com",
+      "url": "https://github.com/getuliojr"
+    },
+    {
+      "name": "Cesar Andreu",
+      "email": "cesarandreu@gmail.com",
+      "url": "https://cesarandreu.com"
+    },
+    {
+      "name": "Michael Westphal",
+      "url": "https://github.com/michaelwestphal"
+    },
+    {
+      "name": "Jackong",
+      "url": "https://github.com/Jackong"
+    },
+    {
+      "name": "Daniel Kennedy",
+      "url": "https://github.com/danwkennedy"
+    },
+    {
+      "name": "Nicolás Fantone",
+      "email": "contact@nfantone.dev",
+      "url": "https://github.com/nfantone"
+    },
+    {
+      "name": "Scott Cooper",
+      "email": "scttcper@gmail.com",
+      "url": "https://github.com/scttcper"
+    },
+    {
+      "name": "Johannes Ewald",
+      "email": "mail@johannesewald.de",
+      "url": "https://github.com/jhnns"
+    },
+    {
+      "name": "Maxim Vorobjov",
+      "url": "https://github.com/dunnock"
+    },
+    {
+      "name": "Imed Jaberi",
+      "email": "imed_jebari@hotmail.fr",
+      "url": "https://github.com/3imed-jaberi"
+    }
+  ],
   "nyc": {
     "reporter": [
       "lcov",
@@ -57,5 +121,9 @@
   "scripts": {
     "test": "mocha --reporter spec test/test.js --exit",
     "test-cov": "nyc npm run test"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/koajs/jwt/issues"
+  },
+  "homepage": "https://github.com/koajs/jwt"
 }
