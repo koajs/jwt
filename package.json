@@ -1,7 +1,7 @@
 {
   "name": "koa-jwt",
   "version": "3.5.1",
-  "description": "Koa JWT authentication middleware.",
+  "description": "Koa middleware for validating JSON Web Tokens",
   "main": "./lib",
   "types": "types/index.d.ts",
   "keywords": [
@@ -16,6 +16,7 @@
     "middleware",
     "token",
     "oauth",
+    "permissions",
     "koa"
   ],
   "repository": {
