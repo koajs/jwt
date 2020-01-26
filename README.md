@@ -1,4 +1,6 @@
-# koa-jwt
+# [**koa-jwt**](https://github.com/koajs/jwt)
+
+> Koa middleware for validating JSON Web Tokens.
 
 [![node version][node-image]][node-url]
 [![npm download][download-image]][download-url]
@@ -20,6 +22,7 @@
 [license-image]: https://img.shields.io/npm/l/koa-jwt.svg?maxAge=2592000&style=flat-square
 [license-url]: https://github.com/koajs/jwt/blob/master/LICENSE
 
+
 ## Table of Contents
 
 - [koa-jwt](#koa-jwt)
@@ -39,6 +42,7 @@
   - [Contributors](#contributors)
   - [License](#license)
 
+
 ## Introduction
 
 This module lets you authenticate HTTP requests using JSON Web Tokens
@@ -51,11 +55,13 @@ for a good introduction.
 * `koa-jwt` version 3+ on the [master](https://github.com/koajs/jwt) branch uses `async` / `await` and hence requires node >= 7.6.
 * If you are using `koa` version 1, you need to install `koa-jwt@1` from npm. This is the code on the [koa-v1](https://github.com/koajs/jwt/tree/koa-v1) branch.
 
+
 ## Install
 
 ```bash
 npm install koa-jwt
 ```
+
 
 ## Usage
 
@@ -63,6 +69,7 @@ The JWT authentication middleware authenticates callers using a JWT
 token. If the token is valid, `ctx.state.user` (by default) will be set
 with the JSON object decoded to be used by later middleware for
 authorization and access control.
+
 
 ### Retrieving the token
 
@@ -84,9 +91,9 @@ should match the following interface:
 
 The resolution order for the token is the following. The first non-empty token resolved will be the one that is verified.
 
-* `opts.getToken` function
-* check the cookies (if `opts.cookie` is set)
-* check the Authorization header for a bearer token
+* `opts.getToken` function.
+* check the cookies (if `opts.cookie` is set).
+* check the Authorization header for a bearer token.
 
 ### Passing the secret
 
@@ -105,12 +112,13 @@ match the following interface:
 /**
  * Your custom isRevoked resolver
  *
- * @param  {object}      ctx The ctx object passed to the middleware
- * @param  {object}      decodedToken Content of the token
- * @param  {object}      token token The token
- * @return {Promise}     If the token is not revoked, the promise must resolve with false, otherwise (the promise resolve with true or error) the token is revoked
+ * @param  {object}   ctx            The ctx object passed to the middleware
+ * @param  {object}   decodedToken   Content of the token
+ * @param  {object}   token          token The token
+ * @return {Promise}                 If the token is not revoked, the promise must resolve with false, otherwise (the promise resolve with true or error) the token is revoked
  */
 ```
+
 
 ## Example
 
@@ -221,6 +229,7 @@ This allows for rolling shared secrets, for example:
 app.use(jwt({ secret: ['old-shared-secret', 'new-shared-secret'] }));
 ```
 
+
 ## Token Verification Exceptions
 
 If the JWT has an expiration (`exp`), it will be checked.
@@ -260,8 +269,7 @@ If the `secret` option is a function, this function is called for each JWT recei
 order to determine which secret is used to verify the JWT.
 
 The signature of this function should be `(header, payload) => [Promise(secret)]`, where
-`header` is the token header and `payload` is the token payload. For instance to support JWKS token header should contain
-`alg` and `kid`: algorithm and key id fields respectively.
+`header` is the token header and `payload` is the token payload. For instance to support JWKS token header should contain `alg` and `kid`: algorithm and key id fields respectively.
 
 This option can be used to support JWKS (JSON Web Key Set) providers by using
 [node-jwks-rsa](https://github.com/auth0/node-jwks-rsa). For example:
@@ -281,9 +289,10 @@ app.use(jwt({
 }));
 ```
 
+
 ## Related Modules
 
-* [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) — JSON Web Token signing and verification
+* [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) — JSON Web Token signing and verification.
 
 Note that koa-jwt no longer exports the `sign`, `verify` and `decode` functions from `jsonwebtoken` in the koa-v2 branch.
 
@@ -293,6 +302,7 @@ Note that koa-jwt no longer exports the `sign`, `verify` and `decode` functions 
 npm install
 npm test
 ```
+
 
 ## Authors/Maintainers
 
@@ -323,4 +333,4 @@ The initial code was largely based on [express-jwt](https://github.com/auth0/exp
 
 ## License
 
-[The MIT License](http://opensource.org/licenses/MIT)
+[MIT](/LICENSE)
