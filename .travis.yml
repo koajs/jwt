@@ -1,11 +1,13 @@
 language: node_js
 node_js:
-  - "7.6"
-  - "stable"
-sudo: false
+  - 7.6
+  - 8
+  - 10
+  - 12
+  - 'lts/*'
+  - 'node'
+script:
+  - npm run test-cov
 after_script:
   - npm i coveralls
   - cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls
-cache:
-  directories:
-    - node_modules

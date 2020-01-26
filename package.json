@@ -55,7 +55,7 @@
     "node": ">= 7.6.0"
   },
   "scripts": {
-    "test": "nyc npm run test-only",
-    "test-only": "mocha --reporter spec test/test.js"
+    "test": "mocha --reporter spec test/test.js",
+    "test-cov": "nyc npm run test"
   }
 }
