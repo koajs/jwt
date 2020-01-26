@@ -1,9 +1,7 @@
 'use strict';
-const TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIiLCJpYXQiOjE0MjY1NDY5MTl9.ETgkTn8BaxIX4YqvUWVFPmum3moNZ7oARZtSBXb_vP4';
 
 const Koa     = require('koa');
 const request = require('supertest');
-const assert  = require('assert');
 const jwt     = require('jsonwebtoken');
 const koajwt  = require('../lib');
 const expect  = require('chai').expect;
@@ -319,11 +317,7 @@ describe('failure tests', () => {
   });
 
   it('should throw if secret provider used but token invalid', done => {
-
-    const secret = 'shhhhhh';
     const provider = ({ alg, kid }) => Promise.resolve('a nice secret');
-    const token = jwt.sign({ foo: 'bar' }, secret);
-
     const app = new Koa();
 
     app.use(koajwt({ secret: provider, debug: true }));
