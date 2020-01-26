@@ -15,7 +15,7 @@ console.log('You can test the server by issuing curl commands like the following
 console.log('');
 console.log('  curl http://localhost:3000/public/foo            # should succeed (return "unprotected")');
 console.log('  curl http://localhost:3000/api/foo               # should fail (return "401 Unauthorized ...")');
-console.log('  curl -H "Authorization: Bearer ' + TOKEN + '" http://localhost:3000/api/foo   # should succeed (return "protected")');
+console.log(`  curl -H "Authorization: Bearer ${TOKEN}" http://localhost:3000/api/foo   # should succeed (return "protected")`);
 console.log('');
 
 const app = new Koa();
