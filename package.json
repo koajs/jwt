@@ -117,7 +117,7 @@
     "supertest": "^4.0.2"
   },
   "engines": {
-    "node": ">= 7.6.0"
+    "node": ">= 8"
   },
   "scripts": {
     "test": "mocha --reporter spec test/test.js --exit",
