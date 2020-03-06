@@ -157,7 +157,7 @@ app.listen(3000);
 Alternatively you can conditionally run the `jwt` middleware under certain conditions:
 
 ```js
-var koa = require('koa');
+var Koa = require('koa');
 var jwt = require('koa-jwt');
 
 var app = new Koa();
