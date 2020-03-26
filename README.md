@@ -77,10 +77,19 @@ should match the following interface:
  * Your custom token resolver
  * @this The ctx object passed to the middleware
  *
- * @param  {object}      opts The middleware's options
+ * @param  {Object}      opts The middleware's options
  * @return {String|null}      The resolved token or null if not found
  */
 ```
+
+opts, the middleware's options:
+
+* getToken
+* secret
+* key
+* isRevoked
+* passthrough
+* debug
 
 The resolution order for the token is the following. The first non-empty token resolved will be the one that is verified.
 
