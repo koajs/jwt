@@ -1,7 +1,8 @@
 {
   "name": "koa-jwt",
-  "version": "3.5.1",
-  "description": "Koa JWT authentication middleware.",
+  "version": "3.6.0",
+  "description": "Koa middleware for validating JSON Web Tokens",
+  "main": "./lib",
   "types": "types/index.d.ts",
   "keywords": [
     "auth",
@@ -15,23 +16,87 @@
     "middleware",
     "token",
     "oauth",
+    "permissions",
     "koa"
   ],
   "repository": {
     "type": "git",
     "url": "git://github.com/koajs/jwt.git"
   },
-  "bugs": {
-    "url": "https://github.com/koajs/jwt/issues"
-  },
-  "homepage": "https://github.com/koajs/jwt",
-  "author": {
-    "name": "Stian Grytøyr",
-    "email": "stian@grytoyr.net",
-    "url": "http://stian.grytoyr.net/"
-  },
   "license": "MIT",
-  "main": "./lib",
+  "authors": [
+    {
+      "name": "Stian Grytøyr",
+      "email": "stian@grytoyr.net",
+      "url": "http://stian.grytoyr.net/"
+    },
+    {
+      "name": "Scott Donnelly",
+      "url": "http://scott.donnel.ly/"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Jesús Rodríguez",
+      "email": "Foxandxss@gmail.com",
+      "url": "http://angular-tips.com/"
+    },
+    {
+      "name": "Teoman Soygul",
+      "url": "http://soygul.com"
+    },
+    {
+      "name": "Charlike Mike Reagent",
+      "email": "hello@tunnckocore.com",
+      "url": "https://tunnckoCore.com"
+    },
+    {
+      "name": "Getulio Romão Campos Junior",
+      "email": "gromao@gmail.com",
+      "url": "https://github.com/getuliojr"
+    },
+    {
+      "name": "Cesar Andreu",
+      "email": "cesarandreu@gmail.com",
+      "url": "https://cesarandreu.com"
+    },
+    {
+      "name": "Michael Westphal",
+      "url": "https://github.com/michaelwestphal"
+    },
+    {
+      "name": "Jackong",
+      "url": "https://github.com/Jackong"
+    },
+    {
+      "name": "Daniel Kennedy",
+      "url": "https://github.com/danwkennedy"
+    },
+    {
+      "name": "Nicolás Fantone",
+      "email": "contact@nfantone.dev",
+      "url": "https://github.com/nfantone"
+    },
+    {
+      "name": "Scott Cooper",
+      "email": "scttcper@gmail.com",
+      "url": "https://github.com/scttcper"
+    },
+    {
+      "name": "Johannes Ewald",
+      "email": "mail@johannesewald.de",
+      "url": "https://github.com/jhnns"
+    },
+    {
+      "name": "Maxim Vorobjov",
+      "url": "https://github.com/dunnock"
+    },
+    {
+      "name": "Imed Jaberi",
+      "email": "imed_jebari@hotmail.fr",
+      "url": "https://github.com/3imed-jaberi"
+    }
+  ],
   "nyc": {
     "reporter": [
       "lcov",
@@ -40,22 +105,26 @@
     "report-dir": "./coverage"
   },
   "dependencies": {
-    "jsonwebtoken": "8.5.1",
-    "koa-unless": "1.0.7",
-    "p-any": "1.1.0"
+    "jsonwebtoken": "^8.5.1",
+    "koa-unless": "^1.0.7",
+    "p-any": "^2.1.0"
   },
   "devDependencies": {
     "chai": "latest",
-    "koa": "^2.0.1",
-    "mocha": "3.2.0",
-    "nyc": "10.1.2",
-    "supertest": "3.0.0"
+    "koa": "^2.11.0",
+    "mocha": "^7.0.1",
+    "nyc": "^15.0.0",
+    "supertest": "^4.0.2"
   },
   "engines": {
-    "node": ">= 7.6.0"
+    "node": ">= 8"
   },
   "scripts": {
-    "test": "nyc npm run test-only",
-    "test-only": "mocha --reporter spec test/test.js"
-  }
+    "test": "mocha --reporter spec test/test.js --exit",
+    "test-cov": "nyc npm run test"
+  },
+  "bugs": {
+    "url": "https://github.com/koajs/jwt/issues"
+  },
+  "homepage": "https://github.com/koajs/jwt"
 }
