@@ -433,6 +433,27 @@ describe('success tests', () => {
       .end(done);
   });
 
+  it('should work if authorization header contains leading and/or trailing whitespace', done => {
+    const validUserResponse = res => res.body.foo !== 'bar' && 'Wrong user';
+
+    const secret = 'shhhhhh';
+    const token = jwt.sign({foo: 'bar'}, secret);
+
+    const app = new Koa();
+
+    app.use(koajwt({ secret: secret }));
+    app.use(ctx => {
+      ctx.body = ctx.state.user;
+    });
+
+    request(app.listen())
+      .get('/')
+      .set('Authorization', `     Bearer ${token}     `)
+      .expect(200)
+      .expect(validUserResponse)
+      .end(done);
+  });
+
   it('should work if authorization header is valid jwt according to one of the secrets', done => {
     const validUserResponse = res => res.body.foo !== 'bar' && 'Wrong user';
 
