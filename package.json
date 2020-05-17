@@ -1,6 +1,6 @@
 {
   "name": "koa-jwt",
-  "version": "3.6.0",
+  "version": "4.0.0",
   "description": "Koa middleware for validating JSON Web Tokens",
   "main": "./lib",
   "types": "types/index.d.ts",
