@@ -89,6 +89,9 @@ opts, the middleware's options:
 * key
 * isRevoked
 * passthrough
+* cookie
+* audience
+* issuer
 * debug
 
 The resolution order for the token is the following. The first non-empty token resolved will be the one that is verified.
