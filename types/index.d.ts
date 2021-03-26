@@ -14,7 +14,7 @@ declare namespace jwt {
         secret: string | string[] | Buffer | Buffer[] | SecretLoader;
         key?: string;
         tokenKey?: string;
-        getToken?(ctx: Koa.Context, opts: jwt.Options): string;
+        getToken?(ctx: Koa.Context, opts: jwt.Options): string | null;
         isRevoked?(ctx: Koa.Context, decodedToken: object, token: string): Promise<boolean>;
         passthrough?: boolean;
         cookie?: string;
