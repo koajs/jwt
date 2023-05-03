@@ -27,7 +27,7 @@ declare namespace jwt {
     export type Secret = string | string[] | Buffer | Buffer[];
     export type SecretLoader = (header: any, payload: any) => Promise<Secret>;
 
-    export type UnlessOptions = (params?: {custom?: (ctx: Koa.Context) => boolean, path?: string | RegExp | (string | RegExp)[], ext?: string | string[],  method?: string | string[]}) => Koa.Middleware
+    export type UnlessOptions = (params?: {custom?: (ctx: Koa.Context) => boolean, path?: string | RegExp | (string | RegExp)[], ext?: string | string[], method?: string | string[], useOriginalUrl?: boolean}) => Koa.Middleware
     export interface Middleware extends Koa.Middleware {
         unless: UnlessOptions;
     }
