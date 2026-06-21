@@ -21,7 +21,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/koajs/jwt.git"
+    "url": "git+https://github.com/koajs/jwt.git"
   },
   "license": "MIT",
   "authors": [
